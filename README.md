@@ -184,6 +184,6 @@ _Add screenshots of the landing page, dashboard, editor with live preview, and t
 
 ## 👤 Author
 
-**Khushal Paunkar** — B.Tech Computer Science Student | Full Stack Developer
+**Sumit Bhoyar** — B.Tech AI Student | Full Stack Developer
 
 Built with ❤️ as a college mini-project.
