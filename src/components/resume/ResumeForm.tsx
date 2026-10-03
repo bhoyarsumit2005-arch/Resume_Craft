@@ -58,7 +58,7 @@ export default function ResumeForm({ resume, onChange, onTemplateChange }: Props
       </SectionCard>
 
       <SectionCard title="Experience" icon={<Briefcase size={16} />} count={resume.experience.length} hidden={hidden("experience")} onToggleHidden={() => toggleSection("experience")}>
-        <ExperienceForm items={resume.experience} onChange={(experience) => onChange({ experience })} />
+        <ExperienceForm items={resume.experience} onChange={(experience) => onChange({ experience })} skills={resume.skills} />
       </SectionCard>
 
       <SectionCard title="Projects" icon={<FolderGit2 size={16} />} count={resume.projects.length} hidden={hidden("projects")} onToggleHidden={() => toggleSection("projects")}>

@@ -13,7 +13,8 @@ ResumeCraft is a full-stack, production-style resume builder built as a college 
 | **Authentication** | Register / Login / Logout, bcrypt password hashing, JWT (httpOnly cookie + Bearer), protected pages & APIs |
 | **Dashboard** | Welcome header, live stats (total resumes, last updated, templates used), resume cards with real thumbnails, empty state |
 | **Resume CRUD** | Create, read, update, delete, **duplicate**, rename — every resume is owned by exactly one user |
-| **Editor** | Personal info (+ photo), summary (with rule-based **Improve Summary**), education, experience, projects (tech tags), skills (add / remove / reorder), certifications, achievements, languages, social links |
+| **Editor** | Personal info (+ photo), summary, education, experience, projects (tech tags), skills (add / remove / reorder), certifications, achievements, languages, social links |
+| **AI assistant** | **Improve Summary** / **Generate Draft** (summary rewrite via OpenRouter) and **Suggest bullets** for experience entries — logged-in only, with rule-based fallback when AI is unavailable |
 | **Section controls** | Collapsible sections, hide/show any section, empty sections never render in the resume |
 | **Live preview** | Auto-scaled A4 page that updates on every keystroke |
 | **Templates** | Modern (accent header, two-column skills), Classic (ATS-friendly, B&W, serif), Minimal (whitespace, label-column layout), Executive (dark sidebar, two-column), Creative (bold accent header + colour rail) — same data, switch anytime |
@@ -53,6 +54,7 @@ A modern **MERN-style** split: a Vite + React SPA talking to a standalone Expres
 ├── server/                  # Express API (TypeScript)
 │   ├── index.ts             # App, routes, static SPA serving, error handling
 │   ├── auth.ts              # JWT sign / verify, requireAuth middleware
+│   ├── ai.ts                # OpenRouter client, AI summary/bullet suggestions, rate limiting
 │   ├── db.ts                # Mongoose connection
 │   ├── schema.ts            # users + resumes Mongoose schemas
 │   └── resume-validation.ts # Resume sanitisation / validation
@@ -71,7 +73,7 @@ A modern **MERN-style** split: a Vite + React SPA talking to a standalone Expres
 │   │                        # AchievementForm, LanguageForm, SocialLinksForm, ResumeNotFound
 │   ├── templates/           # Modern, Classic, Minimal, Executive, Creative, shared
 │   ├── context/             # AuthContext, ToastContext
-│   ├── services/            # api.ts, authService.ts, resumeService.ts
+│   ├── services/            # api.ts, authService.ts, resumeService.ts, aiService.ts
 │   ├── hooks/               # useResume.ts
 │   ├── utils/               # pdf.ts (A4 export + page breaks), summary.ts (Improve Summary)
 │   └── lib/                 # resume-types.ts (types, defaults, sample data)
@@ -118,6 +120,10 @@ npm run typecheck           # tsc --noEmit
 | `PORT` | Port for the Express API (default `3001`) |
 | `JWT_SECRET` | Secret used to sign JWTs (use a long random string) |
 | `STRICT_JWT_SECRET` | Optional. `true` → refuse to start in production without `JWT_SECRET` |
+| `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_SECURE` | SMTP server for OTP emails (Gmail: `smtp.gmail.com`, `587`, `false`) |
+| `EMAIL_USER` / `EMAIL_PASS` / `EMAIL_FROM` | SMTP account + app password used to send OTPs |
+| `OPENROUTER_API_KEY` | Optional. [OpenRouter](https://openrouter.ai/keys) key that powers AI summary & bullet suggestions (key stays server-side) |
+| `OPENROUTER_MODEL` | Optional. Model id, default `openrouter/free` (routes to a free model) |
 
 Secrets are only ever read on the server (`process.env` via `dotenv`) and are never shipped to the browser.
 
@@ -127,8 +133,12 @@ Secrets are only ever read on the server (`process.env` via `dotenv`) and are ne
 
 | Method | Endpoint | Auth | Description |
 | --- | --- | --- | --- |
-| POST | `/api/auth/register` | — | Create account (name, email, password ≥ 6) |
+| POST | `/api/auth/register/send-otp` | — | Start registration, emails a 6-digit OTP |
+| POST | `/api/auth/register/verify` | — | Verify OTP, creates the account and logs in |
 | POST | `/api/auth/login` | — | Login, returns user + JWT (also sets httpOnly cookie) |
+| POST | `/api/auth/forgot-password` | — | Email an OTP to reset the password |
+| POST | `/api/auth/verify-otp` | — | Verify reset OTP, returns a short-lived reset token |
+| POST | `/api/auth/reset-password` | — | Set a new password with the reset token |
 | GET | `/api/auth/me` | ✅ | Current user |
 | POST | `/api/auth/logout` | ✅ | Clear session cookie |
 | GET | `/api/resumes` | ✅ | List the user's resumes |
@@ -139,9 +149,13 @@ Secrets are only ever read on the server (`process.env` via `dotenv`) and are ne
 | POST | `/api/resumes/:id/duplicate` | ✅ | Duplicate resume |
 | GET | `/api/profile` | ✅ | Get profile |
 | PUT | `/api/profile` | ✅ | Update name / change password |
+| POST | `/api/ai/summary` | ✅ | AI rewrite (`mode: "rewrite"`) or generate (`mode: "generate"`) a professional summary |
+| POST | `/api/ai/bullets` | ✅ | AI bullet-point suggestions for an experience/project entry |
 | GET | `/api/health` | — | Health check |
 
-Status codes: `400` validation, `401` unauthenticated, `404` not found / not owned, `500` unexpected (no stack traces exposed).
+Status codes: `400` validation, `401` unauthenticated, `404` not found / not owned, `429` AI rate limit, `500` unexpected (no stack traces exposed).
+
+**AI:** the two `/api/ai/*` routes call [OpenRouter](https://openrouter.ai) server-side (10 requests/min per user). If `OPENROUTER_API_KEY` is unset or the provider fails, summary requests fall back to the built-in rule-based improver so the buttons keep working offline.
 
 ---
 
@@ -173,7 +187,7 @@ _Add screenshots of the landing page, dashboard, editor with live preview, and t
 
 ## 🔮 Future Enhancements
 
-- Real AI-powered summary & bullet suggestions
+- AI project-description bullets & full-resume review
 - Drag-and-drop section ordering
 - Public shareable resume links
 - Cover letter builder

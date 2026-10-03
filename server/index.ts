@@ -10,6 +10,7 @@ import { connect } from "./db";
 import { resumes, users, type ResumeRow } from "./schema";
 import { sanitizeResume, serializeResume } from "./resume-validation";
 import { sendOtpEmail, sendRegistrationOtpEmail } from "./email";
+import { bulletsSuggestion, rateLimit, summarySuggestion, type BulletsInput, type SummaryInput } from "./ai";
 import {
   ApiError,
   clearAuthCookie,
@@ -396,6 +397,28 @@ app.post(
     void _id; void userId; void createdAt; void updatedAt; void __v;
     const copy = await resumes.create({ ...rest, userId: user.id, title: `${title} (Copy)`.slice(0, 160) });
     json(res, { resume: serializeResume(copy as ResumeRow) }, 201);
+  })
+);
+
+// ---------------------------------------------------------------- ai
+
+app.post(
+  "/api/ai/summary",
+  route(async (req, res) => {
+    const user = await requireAuth(req);
+    rateLimit(`ai:summary:${user.id}`, 10, 60_000);
+    const body = readJson<SummaryInput>(req);
+    json(res, await summarySuggestion(body));
+  })
+);
+
+app.post(
+  "/api/ai/bullets",
+  route(async (req, res) => {
+    const user = await requireAuth(req);
+    rateLimit(`ai:bullets:${user.id}`, 10, 60_000);
+    const body = readJson<BulletsInput>(req);
+    json(res, await bulletsSuggestion(body));
   })
 );
 
