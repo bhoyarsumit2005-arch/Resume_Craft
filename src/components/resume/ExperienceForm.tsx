@@ -21,7 +21,13 @@ export default function ExperienceForm({ items, onChange, skills = [] }: Props) 
   const [bullets, setBullets] = useState<string[]>([]);
 
   const update = (id: string, patch: Partial<Experience>) => onChange(items.map((i) => (i.id === id ? { ...i, ...patch } : i)));
-  const remove = (id: string) => onChange(items.filter((i) => i.id !== id));
+  const remove = (id: string) => {
+    onChange(items.filter((i) => i.id !== id));
+    if (suggestFor === id) {
+      setSuggestFor(null);
+      setBullets([]);
+    }
+  };
   const add = () =>
     onChange([...items, { id: uid(), jobTitle: "", company: "", location: "", startDate: "", endDate: "", current: false, description: "" }]);
 
@@ -33,6 +39,8 @@ export default function ExperienceForm({ items, onChange, skills = [] }: Props) 
     const entry = items.find((i) => i.id === id);
     if (!entry) return;
     setBusyId(id);
+    setSuggestFor(null);
+    setBullets([]);
     try {
       const res = await aiService.bullets({
         kind: "experience",
@@ -41,6 +49,10 @@ export default function ExperienceForm({ items, onChange, skills = [] }: Props) 
         description: entry.description,
         skills,
       });
+      if (!res.bullets.length) {
+        toast.info("The AI didn't return any usable bullets this time. Try adding a bit more detail.");
+        return;
+      }
       setSuggestFor(id);
       setBullets(res.bullets);
     } catch (err) {

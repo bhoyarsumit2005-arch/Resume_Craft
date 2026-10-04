@@ -32,10 +32,13 @@ export default function SummaryForm({ value, onChange, context }: Props) {
     try {
       const res = await aiService.summary({ mode: "rewrite", summary: value, ...context });
       onChange(res.text);
-      toast.success(res.source === "ai" ? "Summary improved with AI." : "Summary improved with smart suggestions.");
+      toast.success(res.source === "ai" ? "Summary improved with AI." : "AI is unavailable — applied smart local edits instead.");
     } catch (err) {
-      if (err instanceof ApiRequestError && (err.status === 429 || err.status === 401)) {
-        toast.error(err.message);
+      const status = err instanceof ApiRequestError ? err.status : 0;
+      // Local rule-based edits only stand in for transient/AI failures. Validation and auth
+      // errors must surface as-is, otherwise we silently overwrite the user's own summary.
+      if (status >= 400 && status < 500) {
+        toast.error(err instanceof ApiRequestError ? err.message : "Could not improve the summary.");
       } else {
         onChange(improveSummary(value, context));
         toast.info("AI is unavailable right now — applied smart local edits instead.");
@@ -54,7 +57,11 @@ export default function SummaryForm({ value, onChange, context }: Props) {
     try {
       const res = await aiService.summary({ mode: "generate", summary: "", ...context });
       onChange(res.text);
-      toast.success("Summary drafted with AI. Tweak it to fit your voice.");
+      toast.success(
+        res.source === "ai"
+          ? "Summary drafted with AI. Tweak it to fit your voice."
+          : "AI is unavailable right now — drafted a starting summary from your resume instead."
+      );
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not generate a summary.");
     } finally {

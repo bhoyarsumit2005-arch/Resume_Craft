@@ -31,6 +31,20 @@ app.use(compression());
 app.use(cookieParser());
 app.use(express.json({ limit: "2mb" }));
 
+// Keep malformed request bodies on the same JSON error contract as everything else,
+// instead of Express's default HTML error page.
+app.use((err: unknown, _req: Request, res: Response, next: NextFunction) => {
+  if (err && typeof err === "object" && (err as { type?: string }).type === "entity.parse.failed") {
+    json(res, { message: "Invalid JSON body." }, 400);
+    return;
+  }
+  if (err && typeof err === "object" && (err as { type?: string }).type === "entity.too.large") {
+    json(res, { message: "Request body is too large." }, 413);
+    return;
+  }
+  next(err);
+});
+
 // Security headers
 app.use((_req, res, next) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -406,7 +420,7 @@ app.post(
   "/api/ai/summary",
   route(async (req, res) => {
     const user = await requireAuth(req);
-    rateLimit(`ai:summary:${user.id}`, 10, 60_000);
+    rateLimit(`ai:${user.id}`, 10, 60_000);
     const body = readJson<SummaryInput>(req);
     json(res, await summarySuggestion(body));
   })
@@ -416,7 +430,7 @@ app.post(
   "/api/ai/bullets",
   route(async (req, res) => {
     const user = await requireAuth(req);
-    rateLimit(`ai:bullets:${user.id}`, 10, 60_000);
+    rateLimit(`ai:${user.id}`, 10, 60_000);
     const body = readJson<BulletsInput>(req);
     json(res, await bulletsSuggestion(body));
   })

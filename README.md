@@ -119,11 +119,13 @@ npm run typecheck           # tsc --noEmit
 | `MONGODB_URI` | MongoDB Atlas connection string (Mongoose) |
 | `PORT` | Port for the Express API (default `3001`) |
 | `JWT_SECRET` | Secret used to sign JWTs (use a long random string) |
-| `STRICT_JWT_SECRET` | Optional. `true` → refuse to start in production without `JWT_SECRET` |
+| `OTP_SECRET` | Optional. Secret used to sign email OTP / password-reset tokens (defaults to a fixed dev value — set it in production) |
 | `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_SECURE` | SMTP server for OTP emails (Gmail: `smtp.gmail.com`, `587`, `false`) |
 | `EMAIL_USER` / `EMAIL_PASS` / `EMAIL_FROM` | SMTP account + app password used to send OTPs |
 | `OPENROUTER_API_KEY` | Optional. [OpenRouter](https://openrouter.ai/keys) key that powers AI summary & bullet suggestions (key stays server-side) |
 | `OPENROUTER_MODEL` | Optional. Model id, default `openrouter/free` (routes to a free model) |
+| `OPENROUTER_TIMEOUT_MS` | Optional. Per-request timeout for OpenRouter calls, default `30000`, capped at `60000` |
+| `APP_URL` | Optional. Public site URL sent to OpenRouter as the `HTTP-Referer` attribution header |
 
 Secrets are only ever read on the server (`process.env` via `dotenv`) and are never shipped to the browser.
 
@@ -155,7 +157,7 @@ Secrets are only ever read on the server (`process.env` via `dotenv`) and are ne
 
 Status codes: `400` validation, `401` unauthenticated, `404` not found / not owned, `429` AI rate limit, `500` unexpected (no stack traces exposed).
 
-**AI:** the two `/api/ai/*` routes call [OpenRouter](https://openrouter.ai) server-side (10 requests/min per user). If `OPENROUTER_API_KEY` is unset or the provider fails, summary requests fall back to the built-in rule-based improver so the buttons keep working offline.
+**AI:** the two `/api/ai/*` routes call [OpenRouter](https://openrouter.ai) server-side (10 requests/min per user, shared across both routes). Each request makes at most two upstream calls — the first, plus one retry with reasoning disabled, since free-tier routing can otherwise return an empty completion. If `OPENROUTER_API_KEY` is unset or the provider fails, summary requests fall back to the built-in rule-based improver so the buttons keep working offline; bullet requests return an error toast instead, since there is no local equivalent.
 
 ---
 
