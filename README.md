@@ -22,7 +22,7 @@ ResumeCraft is a full-stack, production-style resume builder built as a college 
 | **PDF export** | html2canvas-pro + jsPDF, A4, smart page breaks that avoid cutting entries, no UI controls in output; **Print Resume** fallback |
 | **Auto-save** | Debounced auto-save with "Saved / Saving… / Unsaved changes" indicator + explicit Save button |
 | **Profile** | Update name, change password, logout |
-| **Demo mode** | `/demo` — try the full editor without an account (stored in the browser only) |
+| **Demo mode** | `/demo` — view a full sample resume preview without an account |
 | **UX polish** | Toast notifications, loading states, error states, empty states, 404 page, responsive (desktop / tablet / mobile), keyboard-friendly, semantic HTML |
 
 ---

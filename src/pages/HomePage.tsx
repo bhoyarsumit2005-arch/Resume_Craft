@@ -1,3 +1,4 @@
+import { useState, type MouseEvent } from "react";
 import { Link } from "react-router";
 import { ArrowRight, Eye, LayoutTemplate, FileDown, ShieldCheck, Files, PenLine, UserPlus, ClipboardList, Palette, Download, Sparkles, CheckCircle2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -26,6 +27,21 @@ const STEPS = [
 export default function HomePage() {
   const { user } = useAuth();
   const primaryHref = user ? "/resumes/new" : "/register";
+  // Pointer position over the hero card stack, used for the tilt + glare effect.
+  const [pointer, setPointer] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+
+  const trackPointer = (e: MouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    setPointer({ x: e.clientX - r.left, y: e.clientY - r.top, w: r.width, h: r.height });
+  };
+
+  const tilt = pointer
+    ? `perspective(900px) rotateX(${((0.5 - pointer.y / pointer.h) * 7).toFixed(2)}deg) rotateY(${((pointer.x / pointer.w - 0.5) * 9).toFixed(2)}deg) rotate(-2deg)`
+    : "rotate(-2deg)";
+  const glare = pointer
+    ? `radial-gradient(340px circle at ${pointer.x}px ${pointer.y}px, rgba(255,255,255,0.45), transparent 65%)`
+    : "transparent";
 
   return (
     <>
@@ -63,9 +79,17 @@ export default function HomePage() {
 
             <div className="relative flex justify-center lg:justify-end fade-up" style={{ animationDelay: "120ms" }}>
               <div className="absolute -inset-6 rounded-3xl bg-white/50 blur-2xl -z-10" />
-              <div className="relative">
-                <div className="rounded-xl overflow-hidden shadow-2xl border border-white/60 rotate-[-2deg] transition-transform duration-300 hover:rotate-0">
+              <div className="relative" onMouseMove={trackPointer} onMouseLeave={() => setPointer(null)}>
+                <div
+                  className="relative rounded-xl overflow-hidden shadow-2xl border border-white/60 transition-transform duration-200 will-change-transform"
+                  style={{ transform: tilt }}
+                >
                   <ResumeThumbnail resume={{ ...sampleResume(), template: "modern" }} width={340} />
+                  <span
+                    className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+                    style={{ background: glare, opacity: pointer ? 1 : 0 }}
+                    aria-hidden="true"
+                  />
                 </div>
                 <div className="absolute -right-6 -bottom-6 hidden sm:block rounded-xl overflow-hidden shadow-xl border border-white/60 rotate-[4deg]">
                   <ResumeThumbnail resume={{ ...sampleResume(), template: "minimal", accentColor: "green" }} width={170} />
