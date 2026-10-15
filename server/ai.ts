@@ -114,8 +114,12 @@ async function chatOnce(
       body: JSON.stringify({
         model,
         messages,
-        max_tokens: opts.maxTokens ?? 1200,
+        max_tokens: opts.maxTokens ?? 3000,
         temperature: opts.temperature ?? 0.5,
+        // Reasoning tokens share the max_tokens budget. The free router can pick a
+        // reasoning model that would otherwise spend the whole budget "thinking" and
+        // return an empty completion, so keep reasoning to a minimum.
+        reasoning_effort: "minimal",
         ...(opts.excludeReasoning ? { reasoning: { exclude: true } } : {}),
       }),
       signal: AbortSignal.timeout(timeoutMs()),
@@ -261,12 +265,12 @@ export async function summarySuggestion(body: SummaryInput): Promise<SummaryResu
       { role: "user", content: user },
     ];
 
-    // At most one retry. The retry disables reasoning because free-tier routing can pick a
-    // reasoning model that burns the whole token budget and returns an empty completion.
+    // At most one retry. The retry hides reasoning output and drops the temperature because
+    // free-tier routing can otherwise return an empty or unusably short completion.
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
         const { text, truncated } = await chatOnce(base, {
-          maxTokens: 1000,
+          maxTokens: 3000,
           temperature: attempt === 0 ? 0.6 : 0.3,
           excludeReasoning: attempt > 0,
         });
@@ -388,7 +392,7 @@ export async function bulletsSuggestion(body: BulletsInput): Promise<BulletsResu
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const { text, truncated } = await chatOnce(base, {
-        maxTokens: 1200,
+        maxTokens: 3000,
         temperature: attempt === 0 ? 0.6 : 0.3,
         excludeReasoning: attempt > 0,
       });
