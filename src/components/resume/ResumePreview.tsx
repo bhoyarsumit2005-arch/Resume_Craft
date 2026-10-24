@@ -6,6 +6,7 @@ import ClassicTemplate from "@/templates/ClassicTemplate";
 import MinimalTemplate from "@/templates/MinimalTemplate";
 import ExecutiveTemplate from "@/templates/ExecutiveTemplate";
 import CreativeTemplate from "@/templates/CreativeTemplate";
+import TimelineTemplate from "@/templates/TimelineTemplate";
 
 const PAPER_WIDTH = 794; // 210mm at 96dpi
 export const EXPORT_ROOT_ID = "resume-export-root";
@@ -21,6 +22,8 @@ export function RenderTemplate({ resume, links = true }: { resume: ResumeData; l
       return <ExecutiveTemplate {...props} />;
     case "creative":
       return <CreativeTemplate {...props} />;
+    case "timeline":
+      return <TimelineTemplate {...props} />;
     default:
       return <ModernTemplate {...props} />;
   }

@@ -22,7 +22,7 @@ export default function NewResumePage() {
     const sample = params.get("sample") === "1";
     const template = params.get("template");
     const data = sample ? createSampleResume() : createEmptyResume({ title: "My Resume" });
-    if (template === "modern" || template === "classic" || template === "minimal" || template === "executive" || template === "creative")
+    if (template === "modern" || template === "classic" || template === "minimal" || template === "executive" || template === "creative" || template === "timeline")
       data.template = template;
     resumeService
       .create(data)

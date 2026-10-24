@@ -1,4 +1,4 @@
-export type TemplateId = "modern" | "classic" | "minimal" | "executive" | "creative";
+export type TemplateId = "modern" | "classic" | "minimal" | "executive" | "creative" | "timeline";
 export type AccentColor = "blue" | "indigo" | "green" | "black" | "purple";
 export type FontSize = "small" | "medium" | "large";
 
@@ -144,6 +144,12 @@ export const TEMPLATES: { id: TemplateId; name: string; description: string; tag
     name: "Creative",
     description: "Bold accent header with monogram and a colourful rail — great for standing out.",
     tags: ["Stand-out", "Bold", "Colourful"],
+  },
+  {
+    id: "timeline",
+    name: "Timeline",
+    description: "Single-column layout with a vertical accent timeline for experience and education — modern and recruiter-friendly.",
+    tags: ["Timeline", "Single column", "Recruiter-friendly"],
   },
 ];
 
