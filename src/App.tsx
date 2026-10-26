@@ -18,6 +18,7 @@ import NotFoundPage from "@/pages/NotFoundPage";
 function ScrollManager() {
   const { pathname, hash } = useLocation();
 
+
   useEffect(() => {
     if (hash) {
       const el = document.getElementById(hash.slice(1));
@@ -31,6 +32,7 @@ function ScrollManager() {
 
   return null;
 }
+
 
 export default function App() {
   return (
