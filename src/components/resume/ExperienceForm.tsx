@@ -6,6 +6,7 @@ import { uid, type Experience } from "@/lib/resume-types";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/context/ToastContext";
 import { aiService } from "@/services/aiService";
+import { ApiRequestError } from "@/services/api";
 
 interface Props {
   items: Experience[];
@@ -56,7 +57,10 @@ export default function ExperienceForm({ items, onChange, skills = [] }: Props) 
       setSuggestFor(id);
       setBullets(res.bullets);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not suggest bullets.");
+      const msg = err instanceof Error ? err.message : "Could not suggest bullets.";
+      // Rate limiting is a "wait and retry" situation, not a failure.
+      if (err instanceof ApiRequestError && err.status === 429) toast.warning(msg);
+      else toast.error(msg);
     } finally {
       setBusyId(null);
     }

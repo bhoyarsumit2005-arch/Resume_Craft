@@ -12,7 +12,7 @@ ResumeCraft is a full-stack, production-style resume builder built as a college 
 | --- | --- |
 | **Authentication** | Register / Login / Logout, bcrypt password hashing, JWT (httpOnly cookie + Bearer), protected pages & APIs |
 | **Dashboard** | Welcome header, live stats (total resumes, last updated, templates used), resume cards with real thumbnails, empty state |
-| **Resume CRUD** | Create, read, update, delete, **duplicate**, rename — every resume is owned by exactly one user |
+| **Resume CRUD** | Create, read, update, delete, **duplicate**, rename — every resume is owned by exactly one user; a new resume is only written to the database on your first edit or **Save**, so abandoned drafts never clutter the dashboard |
 | **Editor** | Personal info (+ photo), summary, education, experience, projects (tech tags), skills (add / remove / reorder), certifications, achievements, languages, social links |
 | **AI assistant** | **Improve Summary** / **Generate Draft** (summary rewrite via OpenRouter) and **Suggest bullets** for experience entries — logged-in only, with rule-based fallback when AI is unavailable |
 | **Section controls** | Collapsible sections, hide/show any section, empty sections never render in the resume |
@@ -118,8 +118,9 @@ npm run typecheck           # tsc --noEmit
 | --- | --- |
 | `MONGODB_URI` | MongoDB Atlas connection string (Mongoose) |
 | `PORT` | Port for the Express API (default `3001`) |
-| `JWT_SECRET` | Secret used to sign JWTs (use a long random string) |
-| `OTP_SECRET` | Optional. Secret used to sign email OTP / password-reset tokens (defaults to a fixed dev value — set it in production) |
+| `JWT_SECRET` | **Required in production.** Signs JWT session tokens (use ≥ 32 random chars) |
+| `STRICT_JWT_SECRET` | Optional. `true` also refuses to boot outside production when `JWT_SECRET` is missing |
+| `OTP_SECRET` | **Required in production.** Signs email OTP / password-reset tokens — must be a *different* secret from `JWT_SECRET` (defaults to a fixed dev value only outside production) |
 | `EMAIL_HOST` / `EMAIL_PORT` / `EMAIL_SECURE` | SMTP server for OTP emails (Gmail: `smtp.gmail.com`, `587`, `false`) |
 | `EMAIL_USER` / `EMAIL_PASS` / `EMAIL_FROM` | SMTP account + app password used to send OTPs |
 | `OPENROUTER_API_KEY` | Optional. [OpenRouter](https://openrouter.ai/keys) key that powers AI summary & bullet suggestions (key stays server-side) |
@@ -137,7 +138,7 @@ Secrets are only ever read on the server (`process.env` via `dotenv`) and are ne
 | --- | --- | --- | --- |
 | POST | `/api/auth/register/send-otp` | — | Start registration, emails a 6-digit OTP |
 | POST | `/api/auth/register/verify` | — | Verify OTP, creates the account and logs in |
-| POST | `/api/auth/login` | — | Login, returns user + JWT (also sets httpOnly cookie) |
+| POST | `/api/auth/login` | — | Login, sets an httpOnly session cookie |
 | POST | `/api/auth/forgot-password` | — | Email an OTP to reset the password |
 | POST | `/api/auth/verify-otp` | — | Verify reset OTP, returns a short-lived reset token |
 | POST | `/api/auth/reset-password` | — | Set a new password with the reset token |
@@ -155,15 +156,49 @@ Secrets are only ever read on the server (`process.env` via `dotenv`) and are ne
 | POST | `/api/ai/bullets` | ✅ | AI bullet-point suggestions for an experience/project entry |
 | GET | `/api/health` | — | Health check |
 
-Status codes: `400` validation, `401` unauthenticated, `404` not found / not owned, `429` AI rate limit, `500` unexpected (no stack traces exposed).
+Status codes: `400` validation, `401` unauthenticated, `404` not found / not owned, `429` rate limited (AI quota, auth brute-force protection, global API cap — always with a `Retry-After` header), `500` unexpected (no stack traces exposed).
 
 **AI:** the two `/api/ai/*` routes call [OpenRouter](https://openrouter.ai) server-side (10 requests/min per user, shared across both routes). Each request makes at most two upstream calls — the first, plus one retry with reasoning disabled, since free-tier routing can otherwise return an empty completion. If `OPENROUTER_API_KEY` is unset or the provider fails, summary requests fall back to the built-in rule-based improver so the buttons keep working offline; bullet requests return an error toast instead, since there is no local equivalent.
 
 ---
 
+## 🔒 Security
+
+**Sessions**
+
+- The session is an **httpOnly cookie** (`SameSite=Lax`, `Secure` in production, scoped to `/api`) — no token is ever written to `localStorage` or returned in a JSON body, so XSS cannot exfiltrate a session.
+- Access tokens carry `purpose: "access"`; password-reset tokens carry `purpose: "reset"` and can never open a session, even if both were signed with the same secret.
+- Every token embeds the user's `tokenVersion`. **Changing or resetting the password bumps it**, which revokes every outstanding token (the tab that changed the password gets a freshly signed cookie).
+
+**Authentication**
+
+- OTPs are 6 digits from `crypto.randomInt`, expire in 10 minutes, and are compared with `crypto.timingSafeEqual`.
+- `JWT_SECRET` and `OTP_SECRET` are **required in production** (the reset-token secret must differ from the session secret — a shared default would allow account takeover).
+- New passwords are capped at 72 characters (bcrypt truncates beyond that).
+- Login/forgot-password answer identically for unknown addresses (no account enumeration).
+
+**Rate limits** (in-memory fixed window; per-instance on serverless)
+
+| Scope | Limit |
+| --- | --- |
+| Every `/api` request | 300 / min per IP |
+| `POST /api/auth/login` | 10 / 15 min per account, 20 / 15 min per IP |
+| `POST /api/auth/register/send-otp` | 3 / 15 min per email, 10 / 15 min per IP |
+| `POST /api/auth/register/verify`, `/verify-otp` | 10 / 15 min per email, 20 / 15 min per IP |
+| `POST /api/auth/forgot-password` | 5 / 15 min per email, 10 / 15 min per IP |
+| `POST /api/auth/reset-password` | 10 / 15 min per IP |
+| `POST /api/resumes` | 60 / min per IP |
+| `POST /api/ai/*` | 10 / min per user |
+
+All `429` responses are JSON and carry a `Retry-After` header.
+
+**Headers** — set by Express (`server/security.ts`) *and* by `vercel.json` (which serves the SPA HTML on Vercel): CSP (`default-src 'self'`, no inline scripts, Google Fonts allowed), `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `COOP`/`CORP`, and `Strict-Transport-Security` in production. API responses are sent with `Cache-Control: no-store`.
+
+---
+
 ## 🗄 Database Models
 
-**users** — `_id`, `name`, `email` (unique), `password` (bcrypt hash), `createdAt`, `updatedAt`
+**users** — `_id`, `name`, `email` (unique), `password` (bcrypt hash), `isVerified`, `registrationOtp`/`registrationOtpExpiry`, `otp`/`otpExpiry`, `tokenVersion`, `createdAt`, `updatedAt`
 
 **resumes** — `_id`, `userId` (ref → users), `title`, `template`, `accentColor`, `fontSize`, `personalInfo`, `summary`, `education[]`, `experience[]`, `projects[]`, `skills[]`, `certifications[]`, `achievements[]`, `languages[]`, `socialLinks[]`, `hiddenSections[]`, `createdAt`, `updatedAt`
 

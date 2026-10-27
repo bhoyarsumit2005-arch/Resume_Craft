@@ -22,7 +22,6 @@ function DashboardContent() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<{ id: string; kind: "duplicate" | "delete" | "download" } | null>(null);
   const [toDelete, setToDelete] = useState<Resume | null>(null);
-  const [creating, setCreating] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -61,12 +60,33 @@ function DashboardContent() {
 
   const confirmDelete = async () => {
     if (!toDelete) return;
-    setBusy({ id: toDelete.id, kind: "delete" });
+    const deleted = toDelete;
+    setBusy({ id: deleted.id, kind: "delete" });
     try {
-      await resumeService.remove(toDelete.id);
-      setResumes((rs) => rs.filter((x) => x.id !== toDelete.id));
-      toast.success("Resume deleted.");
+      await resumeService.remove(deleted.id);
+      setResumes((rs) => rs.filter((x) => x.id !== deleted.id));
       setToDelete(null);
+      let restoring = false;
+      toast.success("Resume deleted.", {
+        action: {
+          label: "Undo",
+          onClick: async () => {
+            if (restoring) return;
+            restoring = true;
+            try {
+              const { id: _i, userId: _u, createdAt: _c, updatedAt: _up, ...data } = deleted;
+              void _i; void _u; void _c; void _up;
+              const restored = await resumeService.create(data);
+              setResumes((rs) => [restored, ...rs]);
+              toast.success("Resume restored.");
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : "Could not restore the resume.");
+            } finally {
+              restoring = false;
+            }
+          },
+        },
+      });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not delete resume.");
     } finally {
@@ -89,10 +109,7 @@ function DashboardContent() {
     }
   };
 
-  const createNew = async (sample: boolean) => {
-    setCreating(true);
-    navigate(sample ? "/resumes/new?sample=1" : "/resumes/new");
-  };
+  const createNew = (sample: boolean) => navigate(sample ? "/resumes/new?sample=1" : "/resumes/new");
 
   const firstName = user?.name.split(" ")[0] ?? "there";
 
@@ -104,10 +121,10 @@ function DashboardContent() {
           <p className="text-gray-500 mt-1">Create and manage your professional resumes.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => createNew(true)} disabled={creating} icon={<Sparkles size={16} className="text-indigo-600" />}>
+          <Button variant="secondary" onClick={() => createNew(true)} icon={<Sparkles size={16} className="text-indigo-600" />}>
             Try Demo Resume
           </Button>
-          <Button onClick={() => createNew(false)} loading={creating} icon={<Plus size={16} />}>
+          <Button onClick={() => createNew(false)} icon={<Plus size={16} />}>
             Create New Resume
           </Button>
         </div>

@@ -25,6 +25,8 @@ export interface UserDoc {
   registrationOtpExpiry?: Date;
   otp?: string;
   otpExpiry?: Date;
+  /** Bumped on password change/reset — tokens with a lower version are rejected. */
+  tokenVersion: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +41,7 @@ const userSchema = new Schema<UserDoc>(
     registrationOtpExpiry: { type: Date, default: undefined },
     otp: { type: String, default: undefined },
     otpExpiry: { type: Date, default: undefined },
+    tokenVersion: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

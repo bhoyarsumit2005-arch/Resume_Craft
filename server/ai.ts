@@ -18,39 +18,6 @@ export function aiConfigured(): boolean {
   return Boolean(process.env.OPENROUTER_API_KEY);
 }
 
-/** Simple fixed-window per-user rate limiter (protects the free-tier AI quota). */
-const buckets = new Map<string, { count: number; resetAt: number }>();
-
-const MAX_BUCKETS = 5000;
-
-/** Safety valve for long-running processes: drop stale windows, never everyone's counters. */
-function pruneBuckets(now: number): void {
-  if (buckets.size <= MAX_BUCKETS) return;
-  for (const [key, bucket] of buckets) {
-    if (now >= bucket.resetAt) buckets.delete(key);
-  }
-  while (buckets.size > MAX_BUCKETS) {
-    const oldest = buckets.keys().next();
-    if (oldest.done) break;
-    buckets.delete(oldest.value);
-  }
-}
-
-export function rateLimit(key: string, max: number, windowMs: number): void {
-  const now = Date.now();
-  const bucket = buckets.get(key);
-  if (!bucket || now >= bucket.resetAt) {
-    buckets.set(key, { count: 1, resetAt: now + windowMs });
-    pruneBuckets(now);
-    return;
-  }
-  bucket.count += 1;
-  if (bucket.count > max) {
-    const wait = Math.ceil((bucket.resetAt - now) / 1000);
-    throw new ApiError(429, `Too many AI requests. Please wait ${wait}s and try again.`);
-  }
-}
-
 interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;

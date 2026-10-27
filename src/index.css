@@ -199,10 +199,35 @@ body {
   max-width: calc(100vw - 2rem);
   width: 360px;
 }
+@media (max-width: 480px) {
+  .toast-container {
+    left: 1rem;
+    width: auto;
+  }
+}
+.toast-dismiss-all {
+  align-self: flex-end;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-muted);
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 3px 10px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.toast-dismiss-all:hover {
+  color: var(--color-text);
+  background: #f3f4f6;
+}
 .toast {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  overflow: hidden;
   background: #fff;
   border: 1px solid var(--color-border);
   border-left: 4px solid var(--color-accent);
@@ -217,13 +242,85 @@ body {
 .toast-error {
   border-left-color: var(--color-danger);
 }
+.toast-warning {
+  border-left-color: #f59e0b;
+}
+.toast-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.toast-count {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-muted);
+  background: #f3f4f6;
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+.toast-action {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-accent);
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+.toast-action:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
 .toast-close {
+  display: flex;
+  flex-shrink: 0;
   color: var(--color-muted);
   padding: 2px;
   border-radius: 6px;
 }
 .toast-close:hover {
   background: #f3f4f6;
+}
+/* Auto-dismiss countdown. Pauses while the toast is hovered or focused. */
+.toast-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--color-accent);
+  transform-origin: left center;
+  animation-name: toast-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+.toast-success .toast-progress {
+  background: var(--color-success);
+}
+.toast-error .toast-progress {
+  background: var(--color-danger);
+}
+.toast-warning .toast-progress {
+  background: #f59e0b;
+}
+.toast:hover .toast-progress,
+.toast:focus-within .toast-progress {
+  animation-play-state: paused;
+}
+.toast.is-leaving {
+  animation: toast-out 200ms ease forwards;
+}
+@keyframes toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
 }
 @keyframes toast-in {
   from {
@@ -233,6 +330,16 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(24px);
   }
 }
 

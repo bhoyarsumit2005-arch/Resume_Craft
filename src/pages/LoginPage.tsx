@@ -13,7 +13,11 @@ export default function LoginPage() {
   const toast = useToast();
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const next = params.get("next") || "/dashboard";
+  // Only same-site paths are allowed: reject absolute and protocol-relative
+  // URLs ("https://evil.com", "//evil.com") so the redirect can never leave
+  // the app. Anything else falls back to the dashboard.
+  const rawNext = params.get("next") ?? "";
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/dashboard";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

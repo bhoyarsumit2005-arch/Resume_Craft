@@ -1,4 +1,4 @@
-/** Small fetch-based API client (cookie auth + Bearer fallback). */
+/** Small fetch-based API client — the session lives in an httpOnly cookie. */
 export class ApiRequestError extends Error {
   status: number;
   constructor(status: number, message: string) {
@@ -7,23 +7,18 @@ export class ApiRequestError extends Error {
   }
 }
 
-const TOKEN_KEY = "rc_token";
-
-export function getStoredToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem(TOKEN_KEY);
-}
-export function storeToken(token: string | null) {
-  if (typeof window === "undefined") return;
-  if (token) window.localStorage.setItem(TOKEN_KEY, token);
-  else window.localStorage.removeItem(TOKEN_KEY);
+// Older builds stored the JWT in localStorage, where any XSS could read it.
+// The session is an httpOnly cookie now, so clear any legacy copies once.
+try {
+  if (typeof window !== "undefined") window.localStorage.removeItem("rc_token");
+} catch {
+  // Storage unavailable (private mode / disabled) — nothing to clean up.
 }
 
 type ApiOptions = Omit<RequestInit, "body"> & { body?: unknown };
 
 export async function api<T>(path: string, options: ApiOptions = {}): Promise<T> {
   const { body, headers, ...rest } = options;
-  const token = getStoredToken();
   let res: Response;
   try {
     res = await fetch(`/api${path}`, {
@@ -31,7 +26,6 @@ export async function api<T>(path: string, options: ApiOptions = {}): Promise<T>
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(headers as Record<string, string>),
       },
       body: body !== undefined ? JSON.stringify(body) : undefined,

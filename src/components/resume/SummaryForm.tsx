@@ -38,7 +38,10 @@ export default function SummaryForm({ value, onChange, context }: Props) {
       // Local rule-based edits only stand in for transient/AI failures. Validation and auth
       // errors must surface as-is, otherwise we silently overwrite the user's own summary.
       if (status >= 400 && status < 500) {
-        toast.error(err instanceof ApiRequestError ? err.message : "Could not improve the summary.");
+        const msg = err instanceof ApiRequestError ? err.message : "Could not improve the summary.";
+        // Rate limiting is a "wait and retry" situation, not a failure.
+        if (status === 429) toast.warning(msg);
+        else toast.error(msg);
       } else {
         onChange(improveSummary(value, context));
         toast.info("AI is unavailable right now — applied smart local edits instead.");
@@ -63,7 +66,9 @@ export default function SummaryForm({ value, onChange, context }: Props) {
           : "AI is unavailable right now — drafted a starting summary from your resume instead."
       );
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not generate a summary.");
+      const msg = err instanceof Error ? err.message : "Could not generate a summary.";
+      if (err instanceof ApiRequestError && err.status === 429) toast.warning(msg);
+      else toast.error(msg);
     } finally {
       setBusy(null);
     }

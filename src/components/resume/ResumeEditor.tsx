@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ArrowLeft, Check, CloudOff, Eye, Pencil, Save, Loader2, Info } from "lucide-react";
 import ResumeForm from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
@@ -9,21 +9,25 @@ import { useToast } from "@/context/ToastContext";
 import { resumeService } from "@/services/resumeService";
 import { templateName, type ResumeData } from "@/lib/resume-types";
 
-type SaveState = "saved" | "saving" | "dirty" | "error";
+type SaveState = "new" | "saved" | "saving" | "dirty" | "error";
 
 interface Props {
-  resumeId?: string; // undefined => demo mode (localStorage only)
+  resumeId?: string; // undefined => demo mode (localStorage only) when draft is false
   initial: ResumeData;
   initialUpdatedAt?: string;
+  /** A brand-new resume that has not been persisted yet — created on the first edit or Save. */
+  draft?: boolean;
 }
 
 const DEMO_KEY = "rc_demo_resume";
 
-export default function ResumeEditor({ resumeId, initial, initialUpdatedAt }: Props) {
+export default function ResumeEditor({ resumeId, initial, initialUpdatedAt, draft = false }: Props) {
   const toast = useToast();
-  const isDemo = resumeId === undefined;
+  const navigate = useNavigate();
+  const isDemo = resumeId === undefined && !draft;
+  const [id, setId] = useState<string | undefined>(resumeId);
   const [resume, setResume] = useState<ResumeData>(initial);
-  const [saveState, setSaveState] = useState<SaveState>("saved");
+  const [saveState, setSaveState] = useState<SaveState>(draft ? "new" : "saved");
   const [lastSaved, setLastSaved] = useState<Date | null>(initialUpdatedAt ? new Date(initialUpdatedAt) : null);
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
   const [editingTitle, setEditingTitle] = useState(false);
@@ -51,7 +55,27 @@ export default function ResumeEditor({ resumeId, initial, initialUpdatedAt }: Pr
       savingRef.current = true;
       setSaveState("saving");
       try {
-        const saved = await resumeService.update(resumeId!, data);
+        if (!id) {
+          // Draft: create the resume only now (first edit / explicit Save),
+          // instead of storing an empty document the moment the page opens.
+          const created = await resumeService.create(data);
+          setLastSaved(new Date(created.updatedAt));
+          setId(created.id);
+          if (latest.current !== data) {
+            // A keystroke landed mid-request — push it before switching routes.
+            try {
+              await resumeService.update(created.id, latest.current);
+            } catch {
+              // The resume exists; autosave keeps trying through the update path.
+            }
+          }
+          savingRef.current = false;
+          pendingRef.current = false;
+          toast.success("Resume created — it now saves automatically as you type.");
+          navigate(`/resumes/${created.id}/edit`, { replace: true });
+          return;
+        }
+        const saved = await resumeService.update(id, data);
         setLastSaved(new Date(saved.updatedAt));
         const changedMeanwhile = latest.current !== data;
         setSaveState(changedMeanwhile ? "dirty" : "saved");
@@ -64,10 +88,12 @@ export default function ResumeEditor({ resumeId, initial, initialUpdatedAt }: Pr
       } catch (err) {
         savingRef.current = false;
         setSaveState("error");
-        toast.error(err instanceof Error ? err.message : "Could not save resume.");
+        toast.error(err instanceof Error ? err.message : "Could not save resume.", {
+          action: { label: "Retry", onClick: () => void persistRef.current(false) },
+        });
       }
     },
-    [isDemo, resumeId, toast]
+    [id, isDemo, navigate, toast]
   );
 
   persistRef.current = persist;
@@ -104,6 +130,7 @@ export default function ResumeEditor({ resumeId, initial, initialUpdatedAt }: Pr
   };
 
   const status = {
+    new: { icon: <Pencil size={14} />, text: "Not saved yet", cls: "text-gray-500" },
     saved: { icon: <Check size={14} />, text: lastSaved ? `Saved ${lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Saved", cls: "text-emerald-600" },
     saving: { icon: <Loader2 size={14} className="animate-spin" />, text: "Saving...", cls: "text-gray-500" },
     dirty: { icon: <Pencil size={14} />, text: "Unsaved changes", cls: "text-amber-600" },
@@ -162,6 +189,18 @@ export default function ResumeEditor({ resumeId, initial, initialUpdatedAt }: Pr
               Create a free account
             </Link>{" "}
             to save resumes to your dashboard.
+          </p>
+        </div>
+      )}
+
+      {draft && !id && (
+        <div className="no-print mb-4 flex items-start gap-2 rounded-lg bg-indigo-50 border border-indigo-200 px-4 py-3 text-sm text-indigo-800">
+          <Info size={16} className="mt-0.5 shrink-0" />
+          <p>
+            <strong>New resume</strong> — nothing is saved until you make a change or press Save.{" "}
+            <Link to="/dashboard" className="underline font-semibold">
+              Back to dashboard
+            </Link>
           </p>
         </div>
       )}

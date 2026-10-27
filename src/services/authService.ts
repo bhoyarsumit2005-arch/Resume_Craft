@@ -1,7 +1,8 @@
-import { api, storeToken } from "./api";
+import { api } from "./api";
 import type { User } from "@/lib/resume-types";
 
-type AuthResponse = { user: User; token: string };
+/** The server sets an httpOnly session cookie — no token ever reaches JS. */
+type AuthResponse = { user: User };
 
 export const authService = {
   async sendRegistrationOtp(name: string, email: string, password: string) {
@@ -9,12 +10,10 @@ export const authService = {
   },
   async verifyRegistrationOtp(email: string, otp: string) {
     const data = await api<AuthResponse>("/auth/register/verify", { method: "POST", body: { email, otp } });
-    storeToken(data.token);
     return data.user;
   },
   async login(email: string, password: string) {
     const data = await api<AuthResponse>("/auth/login", { method: "POST", body: { email, password } });
-    storeToken(data.token);
     return data.user;
   },
   async me() {
@@ -22,7 +21,6 @@ export const authService = {
     return data.user;
   },
   async logout() {
-    storeToken(null);
     await api("/auth/logout", { method: "POST" });
   },
   async updateProfile(payload: { name?: string; currentPassword?: string; newPassword?: string }) {
