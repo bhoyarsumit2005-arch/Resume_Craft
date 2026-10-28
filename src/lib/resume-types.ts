@@ -230,6 +230,12 @@ export function createEmptyResume(overrides: Partial<ResumeData> = {}): ResumeDa
   };
 }
 
+export const SAMPLE_RESUME_PDF = "/files/Sumit-Bhoyar-Resume.pdf";
+
+/**
+ * Demo resume data — mirrors Sumit Bhoyar's actual resume so the live preview
+ * on /demo renders the real content, not placeholder text.
+ */
 export function createSampleResume(): ResumeData {
   return createEmptyResume({
     title: "Sumit Bhoyar – Full Stack Resume",
@@ -237,78 +243,57 @@ export function createSampleResume(): ResumeData {
     accentColor: "indigo",
     personalInfo: {
       fullName: "Sumit Bhoyar",
-      title: "B.Tech Computer Science Student | Full Stack Developer",
-      email: "sumit.bhoyar@example.com",
-      phone: "+91 98765 43210",
+      title: "B.Tech AI Engineering Student | Full Stack Developer",
+      email: "bhoyarsumit2005@gmail.com",
+      phone: "+91 8788831152",
       location: "Nagpur, Maharashtra, India",
-      linkedin: "https://linkedin.com/in/sumitbhoyar",
-      github: "https://github.com/sumitbhoyar",
-      portfolio: "https://sumitbhoyar.dev",
+      linkedin: "https://www.linkedin.com/in/sumit-bhoyar-ai-engineer",
+      github: "https://github.com/bhoyarsumit2005-arch",
+      portfolio: "",
       photo: "",
     },
     summary:
-      "Motivated B.Tech Computer Science student with hands-on experience building full stack web applications using the MERN stack. Passionate about clean UI, scalable APIs, and solving real-world problems through technology. Seeking a software development internship to contribute to impactful products while continuing to grow as an engineer.",
+      "To obtain an internship or entry-level opportunity where I can apply my programming and web development skills, gain practical experience, and contribute to the growth of the organization while continuously improving my technical knowledge. Skilled in JavaScript, React.js, Node.js, Express.js. Built 3 hands-on projects demonstrating practical problem-solving ability.",
     education: [
       {
         id: uid(),
-        degree: "B.Tech in Computer Science & Engineering",
-        institution: "G H Raisoni College of Engineering",
+        degree: "B.Tech in Artificial Intelligence",
+        institution: "G H Raisoni College of Engineering & Management",
         location: "Nagpur, India",
-        startYear: "2022",
-        endYear: "2026",
-        grade: "CGPA 8.6 / 10",
-        description: "Relevant coursework: Data Structures, DBMS, Operating Systems, Web Technologies, Machine Learning.",
+        startYear: "2024",
+        endYear: "2028",
+        grade: "CGPA 9.15 / 10",
+        description: "",
       },
       {
         id: uid(),
         degree: "Higher Secondary (Science)",
-        institution: "Dinanath Junior College",
-        location: "Nagpur, India",
-        startYear: "2020",
-        endYear: "2022",
-        grade: "88%",
-        description: "",
+        institution: "SPM High School & Jr. College, Wani",
+        location: "",
+        startYear: "2022",
+        endYear: "2023",
+        grade: "80.17%",
+        description: "Maharashtra State Board",
       },
     ],
-    experience: [
-      {
-        id: uid(),
-        jobTitle: "Full Stack Developer Intern",
-        company: "TechNova Solutions",
-        location: "Remote",
-        startDate: "Jun 2025",
-        endDate: "",
-        current: true,
-        description:
-          "Developed responsive React dashboards used by 500+ daily users.\nBuilt REST APIs with Node.js and Express, reducing response times by 30%.\nCollaborated with a 5-member agile team using Git and Jira.",
-      },
-    ],
+    experience: [],
     projects: [
-      {
-        id: uid(),
-        name: "Lost & Found Web Application",
-        description:
-          "A campus-wide platform to report and recover lost items with image uploads, category filters, and email notifications.",
-        technologies: ["React", "Node.js", "Express", "MongoDB", "Cloudinary"],
-        githubUrl: "https://github.com/sumitbhoyar/lost-and-found",
-        liveUrl: "",
-      },
       {
         id: uid(),
         name: "ResumeCraft",
         description:
           "Smart resume builder with live preview, multiple templates, JWT authentication, and one-click PDF export.",
-        technologies: ["React", "Node.js", "JWT", "jsPDF"],
-        githubUrl: "https://github.com/sumitbhoyar/resumecraft",
-        liveUrl: "https://resumecraft.app",
+        technologies: ["React", "Node.js", "JWT", "jsPDF", "TypeScript"],
+        githubUrl: "https://github.com/bhoyarsumit2005-arch/ResumeCraft",
+        liveUrl: "",
       },
       {
         id: uid(),
-        name: "KisaanMitra AI",
+        name: "Sigma_GPT",
         description:
-          "AI-powered assistant for farmers offering crop recommendations, weather insights, and market price tracking in regional languages.",
-        technologies: ["Python", "Flask", "React", "OpenWeather API"],
-        githubUrl: "https://github.com/sumitbhoyar/kisaanmitra-ai",
+          "Developed SigmaGPT, an AI-powered chat application using React.js, Node.js, Express.js, MongoDB, and the Groq API to generate AI responses. Implemented JWT-based authentication, secure user sessions, and user-specific chat history with backend access control.",
+        technologies: ["React", "Vite", "Node.js", "Express.js", "MongoDB", "Groq API", "JWT Authentication"],
+        githubUrl: "https://github.com/bhoyarsumit2005-arch/SigmaGPT",
         liveUrl: "",
       },
     ],
@@ -317,31 +302,25 @@ export function createSampleResume(): ResumeData {
       {
         id: uid(),
         name: "Full Stack Web Development",
-        organization: "Coursera – Meta",
-        date: "Mar 2025",
-        credentialUrl: "https://coursera.org/verify/example",
+        organization: "Apna College",
+        date: "",
+        credentialUrl: "",
       },
       {
         id: uid(),
-        name: "Java Programming Masterclass",
-        organization: "Udemy",
-        date: "Nov 2024",
+        name: "Data Science",
+        organization: "Code with Harry",
+        date: "",
         credentialUrl: "",
       },
     ],
-    achievements: [
-      { id: uid(), title: "Winner – Smart India Hackathon 2024 (College Level)", description: "Led a team of 6 to build a civic-issue reporting app." },
-      { id: uid(), title: "Top 5% – CodeChef Starters", description: "Consistently ranked in the top 5% across 10+ contests." },
-      { id: uid(), title: "Technical Head – Coding Club", description: "Organised 8 workshops on web development for 300+ students." },
-    ],
+    achievements: [],
     languages: [
       { id: uid(), name: "English", proficiency: "Professional" },
       { id: uid(), name: "Hindi", proficiency: "Fluent" },
       { id: uid(), name: "Marathi", proficiency: "Native" },
     ],
-    socialLinks: [
-      { id: uid(), label: "LeetCode", url: "https://leetcode.com/sumitbhoyar" },
-    ],
+    socialLinks: [],
   });
 }
 

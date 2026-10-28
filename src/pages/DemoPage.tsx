@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { ArrowRight, Sparkles, X, Lock } from "lucide-react";
+import { ArrowRight, Download, ExternalLink, Eye, FileText, Sparkles, X, Lock } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import ResumePreview from "@/components/resume/ResumePreview";
-import { createSampleResume } from "@/lib/resume-types";
+import { createSampleResume, SAMPLE_RESUME_PDF } from "@/lib/resume-types";
 
 const sampleResume = createSampleResume();
 
 export default function DemoPage() {
   const [bannerVisible, setBannerVisible] = useState(true);
+  const [view, setView] = useState<"preview" | "pdf">("preview");
 
   return (
     <>
@@ -43,24 +44,79 @@ export default function DemoPage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
           <div className="no-print text-center mb-8">
             <span className="badge mb-3 inline-flex items-center gap-1.5">
-              <Sparkles size={12} /> Sample Resume
+              <Sparkles size={12} /> Demo Resume · Sumit Bhoyar
             </span>
-            <h1 className="text-2xl sm:text-3xl font-bold mt-2">See what you can build with ResumeCraft</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mt-2">A real resume, built with ResumeCraft</h1>
             <p className="mt-2 text-gray-500 max-w-lg mx-auto">
-              Professional templates, live preview, and one-click PDF export — all for free.
+              Explore the live preview below, or open the original PDF — then build your own with the same templates.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link to="/register" className="btn btn-primary btn-lg">
                 Start Building <ArrowRight size={18} />
               </Link>
+              <a
+                href={SAMPLE_RESUME_PDF}
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-secondary btn-lg"
+              >
+                <ExternalLink size={18} /> View Original PDF
+              </a>
               <Link to="/templates" className="btn btn-secondary btn-lg">
                 Browse Templates
               </Link>
             </div>
           </div>
 
-          {/* Full-size resume preview */}
-          <ResumePreview resume={sampleResume} withExportCopy={false} links={false} />
+          {/* Full-size live resume preview / original PDF */}
+          <div className="no-print flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div className="inline-flex items-center rounded-full border border-gray-200 bg-white p-1 shadow-sm" role="tablist" aria-label="Resume view">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={view === "preview"}
+                onClick={() => setView("preview")}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                  view === "preview" ? "bg-indigo-600 text-white" : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                <Eye size={14} /> Live Preview
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={view === "pdf"}
+                onClick={() => setView("pdf")}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                  view === "pdf" ? "bg-indigo-600 text-white" : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                <FileText size={14} /> Original PDF
+              </button>
+            </div>
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-gray-700">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              {view === "preview" ? "Live preview" : "Sumit-Bhoyar-Resume.pdf"}
+            </span>
+            <a
+              href={SAMPLE_RESUME_PDF}
+              download
+              className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1.5 font-medium"
+            >
+              <Download size={14} /> Download PDF
+            </a>
+          </div>
+          {view === "preview" ? (
+            <ResumePreview resume={sampleResume} withExportCopy={false} links={false} />
+          ) : (
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+              <iframe
+                src={`${SAMPLE_RESUME_PDF}#view=FitH`}
+                title="Sumit Bhoyar resume PDF preview"
+                className="h-[80vh] min-h-[520px] w-full"
+              />
+            </div>
+          )}
         </div>
       </main>
     </>
