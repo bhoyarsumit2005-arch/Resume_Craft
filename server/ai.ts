@@ -330,16 +330,16 @@ export async function bulletsSuggestion(body: BulletsInput): Promise<BulletsResu
   const context =
     kind === "experience"
       ? [
-          `Role: ${jobTitle || "unspecified"}`,
-          `Company: ${company || "unspecified"}`,
-          `Skills: ${skills.join(", ") || "unspecified"}`,
-          `Existing notes/description:\n${untrusted("notes", description)}`,
-        ].join("\n")
+        `Role: ${jobTitle || "unspecified"}`,
+        `Company: ${company || "unspecified"}`,
+        `Skills: ${skills.join(", ") || "unspecified"}`,
+        `Existing notes/description:\n${untrusted("notes", description)}`,
+      ].join("\n")
       : [
-          `Project: ${untrusted("project_name", jobTitle)}`,
-          `Technologies/notes:\n${untrusted("notes", description)}`,
-          `Skills: ${skills.join(", ") || "unspecified"}`,
-        ].join("\n");
+        `Project: ${untrusted("project_name", jobTitle)}`,
+        `Technologies/notes:\n${untrusted("notes", description)}`,
+        `Skills: ${skills.join(", ") || "unspecified"}`,
+      ].join("\n");
 
   const system =
     'You write resume bullet points. Respond with JSON ONLY in the form {"bullets":["...","..."]} — no prose, no markdown fences. ' +

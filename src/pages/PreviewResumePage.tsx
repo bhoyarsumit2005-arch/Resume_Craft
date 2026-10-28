@@ -10,7 +10,6 @@ import PDFButton from "@/components/resume/PDFButton";
 import { useResume } from "@/hooks/useResume";
 import { useToast } from "@/context/ToastContext";
 import { exportResumePdf, safeFilename } from "@/utils/pdf";
-import { EXPORT_ROOT_ID } from "@/components/resume/ResumePreview";
 import { templateName } from "@/lib/resume-types";
 
 function PreviewContent({ id }: { id: string }) {
@@ -27,7 +26,7 @@ function PreviewContent({ id }: { id: string }) {
     const name = resume.personalInfo.fullName ? `${resume.personalInfo.fullName}_Resume` : resume.title;
     const t = window.setTimeout(async () => {
       try {
-        await exportResumePdf(safeFilename(name), EXPORT_ROOT_ID);
+        await exportResumePdf(safeFilename(name), resume);
         toast.success("PDF downloaded successfully.");
       } catch {
         toast.error("Could not generate PDF automatically. Use the Download button.");
@@ -57,7 +56,7 @@ function PreviewContent({ id }: { id: string }) {
         <Link to={`/resumes/${resume.id}/edit`} className="btn btn-secondary btn-sm">
           <Pencil size={15} /> Edit
         </Link>
-        <PDFButton filename={fileName} size="sm" />
+        <PDFButton filename={fileName} resume={resume} size="sm" />
       </div>
       <ResumePreview resume={resume} />
     </div>

@@ -176,7 +176,7 @@ export default function ResumeEditor({ resumeId, initial, initialUpdatedAt, draf
           <Button variant="secondary" size="sm" onClick={saveNow} loading={saveState === "saving"} icon={<Save size={15} />}>
             Save
           </Button>
-          <PDFButton filename={fileName} size="sm" showPrint />
+          <PDFButton filename={fileName} resume={resume} size="sm" showPrint />
         </div>
       </div>
 

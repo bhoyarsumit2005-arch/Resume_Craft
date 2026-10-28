@@ -29,7 +29,7 @@ export function RenderTemplate({ resume, links = true }: { resume: ResumeData; l
   }
 }
 
-/** Full-size, off-screen copy of the resume used for PDF export and printing. */
+/** Full-size, off-screen copy of the resume used for printing. */
 function PrintableResume({ resume }: { resume: ResumeData }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -46,7 +46,7 @@ function PrintableResume({ resume }: { resume: ResumeData }) {
 
 interface Props {
   resume: ResumeData;
-  /** Render the hidden export copy (only one per page should do this). */
+  /** Render the hidden print copy (only one per page should do this). */
   withExportCopy?: boolean;
   /** Whether to render clickable links (set false for demo/preview-only). */
   links?: boolean;

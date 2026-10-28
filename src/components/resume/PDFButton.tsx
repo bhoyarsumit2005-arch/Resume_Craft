@@ -3,23 +3,24 @@ import { Download, Printer } from "lucide-react";
 import Button from "@/components/common/Button";
 import { useToast } from "@/context/ToastContext";
 import { exportResumePdf, safeFilename } from "@/utils/pdf";
-import { EXPORT_ROOT_ID } from "./ResumePreview";
+import type { ResumeData } from "@/lib/resume-types";
 
 interface Props {
   filename: string;
+  resume: ResumeData;
   size?: "sm" | "md";
   variant?: "primary" | "secondary" | "dark";
   showPrint?: boolean;
 }
 
-export default function PDFButton({ filename, size = "md", variant = "primary", showPrint = true }: Props) {
+export default function PDFButton({ filename, resume, size = "md", variant = "primary", showPrint = true }: Props) {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
   const download = async () => {
     setLoading(true);
     try {
-      await exportResumePdf(safeFilename(filename), EXPORT_ROOT_ID);
+      await exportResumePdf(safeFilename(filename), resume);
       toast.success("PDF downloaded successfully.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not generate PDF. Try Print instead.");

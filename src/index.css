@@ -1,22 +1,50 @@
 @import "tailwindcss";
 
+/*
+ * Brand palette: Jet Black + Cerulean Blue + Neon Rose.
+ * The indigo/purple utilities are remapped to the brand colours so existing
+ * components pick up the palette without one-off class changes.
+ */
+@theme {
+  --color-jet: #0a0a0a;
+  --color-cerulean: #007ba7;
+  --color-neonrose: #ff4f9a;
+
+  --color-indigo-50: #e9f7fc;
+  --color-indigo-100: #cdeef7;
+  --color-indigo-200: #9fdeed;
+  --color-indigo-300: #63c8df;
+  --color-indigo-400: #2baccb;
+  --color-indigo-500: #0f92b5;
+  --color-indigo-600: #007ba7;
+  --color-indigo-700: #006485;
+  --color-indigo-800: #07516a;
+  --color-indigo-900: #0a4357;
+  --color-indigo-950: #042c3a;
+
+  --color-purple-400: #ff9cc8;
+  --color-purple-500: #ff7ab8;
+  --color-purple-600: #ff4f9a;
+  --color-purple-700: #db2777;
+}
+
 :root {
-  --color-primary: #0f1f3d;
-  --color-primary-hover: #182d55;
-  --color-accent: #4f46e5;
-  --color-accent-hover: #4338ca;
-  --color-accent-soft: #eef2ff;
-  --color-bg: #f5f7fb;
+  --color-primary: #0a0a0a;
+  --color-primary-hover: #262626;
+  --color-accent: #007ba7;
+  --color-accent-hover: #006485;
+  --color-accent-soft: #e9f7fc;
+  --color-bg: #f6f9fa;
   --color-surface: #ffffff;
-  --color-text: #1f2937;
+  --color-text: #171717;
   --color-muted: #6b7280;
   --color-border: #e5e7eb;
   --color-danger: #dc2626;
   --color-success: #059669;
   --radius: 12px;
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --shadow-md: 0 6px 20px rgba(16, 24, 40, 0.08);
-  --shadow-lg: 0 20px 50px rgba(16, 24, 40, 0.14);
+  --shadow-sm: 0 1px 2px rgba(10, 10, 10, 0.06);
+  --shadow-md: 0 6px 20px rgba(10, 10, 10, 0.08);
+  --shadow-lg: 0 20px 50px rgba(10, 10, 10, 0.14);
   --transition: 180ms ease;
 }
 
@@ -56,7 +84,7 @@ body {
 .btn-primary {
   background: var(--color-accent);
   color: #fff;
-  box-shadow: 0 1px 2px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 1px 2px rgba(0, 123, 167, 0.25);
 }
 .btn-primary:hover:not(:disabled) {
   background: var(--color-accent-hover);
@@ -129,7 +157,7 @@ body {
 .select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.18);
 }
 .input.has-error,
 .textarea.has-error {
@@ -387,7 +415,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(10, 10, 10, 0.55);
   backdrop-filter: blur(2px);
   display: grid;
   place-items: center;

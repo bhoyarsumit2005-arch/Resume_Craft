@@ -64,7 +64,7 @@ export default function PersonalInfoForm({ value, onChange }: Props) {
           {value.photo ? <img src={value.photo} alt="Profile preview" className="h-full w-full object-cover" /> : <Camera size={22} />}
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-medium">Profile Photo <span className="text-gray-400 font-normal">(optional)</span></span>
+          <span className="text-sm font-medium">Profile Photo <span className="text-gray-400 font-normal">(not shown — ATS-friendly templates omit photos)</span></span>
           <div className="flex gap-2">
             <button type="button" className="btn btn-secondary btn-sm" onClick={() => fileRef.current?.click()}>
               <Camera size={14} /> Upload

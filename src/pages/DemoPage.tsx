@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { ArrowRight, Download, ExternalLink, Eye, FileText, Sparkles, X, Lock } from "lucide-react";
+import { ArrowRight, ExternalLink, Eye, FileText, Sparkles, X, Lock } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import ResumePreview from "@/components/resume/ResumePreview";
+import PDFButton from "@/components/resume/PDFButton";
 import { createSampleResume, SAMPLE_RESUME_PDF } from "@/lib/resume-types";
 
 const sampleResume = createSampleResume();
@@ -98,13 +99,13 @@ export default function DemoPage() {
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               {view === "preview" ? "Live preview" : "Sumit-Bhoyar-Resume.pdf"}
             </span>
-            <a
-              href={SAMPLE_RESUME_PDF}
-              download
-              className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1.5 font-medium"
-            >
-              <Download size={14} /> Download PDF
-            </a>
+            <PDFButton
+              filename="Sumit_Bhoyar_Resume"
+              resume={sampleResume}
+              size="sm"
+              variant="secondary"
+              showPrint={false}
+            />
           </div>
           {view === "preview" ? (
             <ResumePreview resume={sampleResume} withExportCopy={false} links={false} />

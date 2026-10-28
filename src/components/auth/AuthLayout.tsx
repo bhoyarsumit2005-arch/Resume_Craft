@@ -6,12 +6,12 @@ import { Logo } from "@/components/layout/Navbar";
 export default function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle: string; children: ReactNode; footer: ReactNode }) {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      <aside className="hidden lg:flex flex-col justify-between p-12 text-white" style={{ background: "linear-gradient(160deg, #0f1f3d 0%, #1e2a5a 60%, #312e81 100%)" }}>
+      <aside className="hidden lg:flex flex-col justify-between p-12 text-white" style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #063b4e 58%, #007ba7 100%)" }}>
         <Logo />
         <div>
           <h2 className="text-4xl font-bold leading-tight">Build Your Resume.<br />Showcase Your Skills.<br />Get Career Ready.</h2>
           <ul className="mt-8 space-y-3 text-indigo-100">
-            {["Live preview while you type", "5 professional templates", "One-click A4 PDF export", "Secure, private storage"].map((t) => (
+            {["Live preview while you type", "6 ATS-friendly templates", "Selectable-text A4 PDF export", "Secure, private storage"].map((t) => (
               <li key={t} className="flex items-center gap-2">
                 <CheckCircle2 size={18} className="text-emerald-400" /> {t}
               </li>

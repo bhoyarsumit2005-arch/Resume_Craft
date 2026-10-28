@@ -19,9 +19,13 @@ export default function TemplatesPage() {
       <Navbar />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 py-12 min-h-[70vh]">
         <div className="text-center max-w-2xl mx-auto">
-          <span className="badge">Templates</span>
+          <span className="badge">ATS-Friendly Templates</span>
           <h1 className="mt-3 text-3xl sm:text-4xl font-bold">Professional templates for every career stage</h1>
-          <p className="mt-3 text-gray-500">All templates share the same data — switch between them anytime without losing a single word.</p>
+          <p className="mt-3 text-gray-500">
+            Every template uses one clean column, standard section headings, plain-text contact details and no tables,
+            icons or photos — so applicant tracking systems can read your resume correctly.
+          </p>
+          <p className="mt-2 text-sm text-gray-500">All templates share the same data — switch between them anytime without losing a single word.</p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3 mt-12">

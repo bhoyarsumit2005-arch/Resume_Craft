@@ -118,47 +118,47 @@ export const TEMPLATES: { id: TemplateId; name: string; description: string; tag
   {
     id: "modern",
     name: "Modern",
-    description: "Clean header with accent color, professional typography and a two-column skills area.",
-    tags: ["Accent color", "Two-column skills", "Popular"],
+    description: "Clean single-column ATS layout with a strong accent header and standard section headings.",
+    tags: ["ATS-friendly", "Single column", "Popular"],
   },
   {
     id: "classic",
     name: "Classic",
-    description: "Traditional black & white structure. Minimal styling and fully ATS-friendly.",
-    tags: ["ATS-friendly", "Traditional", "Black & white"],
+    description: "Traditional black-and-white ATS format with a centered header and clear section rules.",
+    tags: ["ATS-friendly", "Single column", "Traditional"],
   },
   {
     id: "minimal",
     name: "Minimal",
-    description: "Generous whitespace, modern typography and simple section separators.",
-    tags: ["Whitespace", "Modern type", "Elegant"],
+    description: "Airy single-column ATS layout with quiet headings and generous whitespace.",
+    tags: ["ATS-friendly", "Single column", "Elegant"],
   },
   {
     id: "executive",
     name: "Executive",
-    description: "Strong two-column layout with a dark sidebar for contact, skills and certifications.",
-    tags: ["Dark sidebar", "Professional", "Two-column"],
+    description: "Compact single-column ATS layout with strong serif typography and clear date lines.",
+    tags: ["ATS-friendly", "Single column", "Professional"],
   },
   {
     id: "creative",
     name: "Creative",
-    description: "Bold accent header with monogram and a colourful rail — great for standing out.",
-    tags: ["Stand-out", "Bold", "Colourful"],
+    description: "Expressive typography inside a safe single-column ATS structure — no graphics or sidebars.",
+    tags: ["ATS-friendly", "Single column", "Stand-out"],
   },
   {
     id: "timeline",
     name: "Timeline",
-    description: "Single-column layout with a vertical accent timeline for experience and education — modern and recruiter-friendly.",
-    tags: ["Timeline", "Single column", "Recruiter-friendly"],
+    description: "Date-led single-column ATS layout that keeps your career story easy to scan.",
+    tags: ["ATS-friendly", "Single column", "Recruiter-friendly"],
   },
 ];
 
 export const ACCENT_COLORS: { id: AccentColor; label: string; hex: string }[] = [
-  { id: "blue", label: "Blue", hex: "#2563eb" },
-  { id: "indigo", label: "Indigo", hex: "#4f46e5" },
+  { id: "blue", label: "Sky Blue", hex: "#2baccb" },
+  { id: "indigo", label: "Cerulean Blue", hex: "#007ba7" },
   { id: "green", label: "Green", hex: "#059669" },
-  { id: "black", label: "Black", hex: "#111827" },
-  { id: "purple", label: "Purple", hex: "#7c3aed" },
+  { id: "black", label: "Jet Black", hex: "#0a0a0a" },
+  { id: "purple", label: "Neon Rose", hex: "#ff4f9a" },
 ];
 
 export const FONT_SIZES: { id: FontSize; label: string; px: number }[] = [
@@ -262,7 +262,7 @@ export function createSampleResume(): ResumeData {
         location: "Nagpur, India",
         startYear: "2024",
         endYear: "2028",
-        grade: "CGPA 9.15 / 10",
+        grade: "CGPA 8.15 / 10",
         description: "",
       },
       {
@@ -272,7 +272,7 @@ export function createSampleResume(): ResumeData {
         location: "",
         startYear: "2022",
         endYear: "2023",
-        grade: "80.17%",
+        grade: "60.17%",
         description: "Maharashtra State Board",
       },
     ],

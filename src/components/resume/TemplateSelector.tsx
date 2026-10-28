@@ -20,6 +20,10 @@ export default function TemplateSelector({ resume, onTemplate, onAccent, onFontS
             <TemplateCard key={t.id} id={t.id} name={t.name} selected={resume.template === t.id} onSelect={onTemplate} resume={resume} width={120} />
           ))}
         </div>
+        <p className="field-hint mt-2">
+          All templates are ATS-friendly: single column, standard headings, plain-text contact details, and no tables,
+          icons or photos.
+        </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

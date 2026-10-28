@@ -2,7 +2,7 @@
 
 > **Build Your Resume. Showcase Your Skills. Get Career Ready.**
 
-ResumeCraft is a full-stack, production-style resume builder built as a college mini-project. Users register, create multiple resumes, edit them in a two-column editor with an instant **live A4 preview**, switch between **six professional templates**, customise accent colour / font size, and export a **multi-page A4 PDF** (or print) — all backed by a secure JWT-authenticated REST API (Express) and a MongoDB Atlas database (Mongoose).
+ResumeCraft is a full-stack, production-style resume builder built as a college mini-project. Users register, create multiple resumes, edit them in a two-column editor with an instant **live A4 preview**, switch between **six ATS-friendly templates**, customise accent colour / font size, and export a **multi-page A4 PDF with selectable text** (or print) — all backed by a secure JWT-authenticated REST API (Express) and a MongoDB Atlas database (Mongoose).
 
 ---
 
@@ -17,7 +17,7 @@ ResumeCraft is a full-stack, production-style resume builder built as a college 
 | **AI assistant** | **Improve Summary** / **Generate Draft** (summary rewrite via OpenRouter) and **Suggest bullets** for experience entries — logged-in only, with rule-based fallback when AI is unavailable |
 | **Section controls** | Collapsible sections, hide/show any section, empty sections never render in the resume |
 | **Live preview** | Auto-scaled A4 page that updates on every keystroke |
-| **Templates** | Modern (accent header, two-column skills), Classic (ATS-friendly, B&W, serif), Minimal (whitespace, label-column layout), Executive (dark sidebar, two-column), Creative (bold accent header + colour rail), Timeline (single-column with accent timeline) — same data, switch anytime |
+| **Templates** | Six ATS-friendly, single-column designs — Modern, Classic, Minimal, Executive, Creative and Timeline. All use plain-text contact details, standard section headings, simple bullets and no tables, icons, photos or sidebars. Same data, switch anytime |
 | **Customisation** | 5 accent colours (Blue, Indigo, Green, Black, Purple) and 3 font sizes |
 | **PDF export** | html2canvas-pro + jsPDF, A4, smart page breaks that avoid cutting entries, no UI controls in output; **Print Resume** fallback |
 | **Auto-save** | Debounced auto-save with "Saved / Saving… / Unsaved changes" indicator + explicit Save button |

@@ -11,8 +11,8 @@ import { TEMPLATES } from "@/lib/resume-types";
 const FEATURES = [
   { icon: <PenLine size={22} />, title: "Easy Resume Builder", text: "Guided, section-by-section forms with helpful placeholders — no design skills required." },
   { icon: <Eye size={22} />, title: "Live Preview", text: "See every keystroke reflected instantly on an A4 page. What you see is exactly what you download." },
-  { icon: <LayoutTemplate size={22} />, title: "Professional Templates", text: "Modern, Classic and Minimal designs. Switch anytime — your content stays intact." },
-  { icon: <FileDown size={22} />, title: "PDF Export", text: "One-click A4 PDF with smart page breaks, plus a print-ready view for quick sharing." },
+  { icon: <LayoutTemplate size={22} />, title: "ATS-Friendly Templates", text: "Six single-column designs with standard headings and no tables or graphics. Switch anytime — your content stays intact." },
+  { icon: <FileDown size={22} />, title: "ATS-Ready PDF Export", text: "One-click A4 PDF with selectable, machine-readable text and smart page breaks." },
   { icon: <ShieldCheck size={22} />, title: "Secure Storage", text: "JWT authentication and hashed passwords keep your account and resumes private." },
   { icon: <Files size={22} />, title: "Multiple Resumes", text: "Create tailored versions for each role, duplicate in a click and manage them from one dashboard." },
 ];
@@ -49,7 +49,7 @@ export default function HomePage() {
       <main id="home">
         {/* Hero */}
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(60% 60% at 80% 10%, #e0e7ff 0%, transparent 60%), radial-gradient(40% 40% at 10% 80%, #dbeafe 0%, transparent 60%)" }} />
+          <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(60% 60% at 80% 10%, #d7f0f8 0%, transparent 60%), radial-gradient(40% 40% at 10% 80%, #ffe0ee 0%, transparent 60%)" }} />
           <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
             <div className="fade-up">
               <span className="badge"><Sparkles size={12} /> Smart Resume Builder for Students</span>
@@ -163,7 +163,7 @@ export default function HomePage() {
 
         {/* CTA */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-20">
-          <div className="rounded-2xl px-6 py-14 text-center text-white" style={{ background: "linear-gradient(135deg, #0f1f3d 0%, #312e81 100%)" }}>
+          <div className="rounded-2xl px-6 py-14 text-center text-white" style={{ background: "linear-gradient(135deg, #0a0a0a 0%, #007ba7 70%, #ff4f9a 100%)" }}>
             <h2 className="text-3xl sm:text-4xl font-bold">Your next opportunity starts with a great resume.</h2>
             <p className="mt-3 text-indigo-100 max-w-xl mx-auto">Join students building standout resumes with ResumeCraft. It takes less than 10 minutes.</p>
             <Link to={primaryHref} className="btn btn-lg mt-8 bg-white text-indigo-700 hover:bg-indigo-50">
