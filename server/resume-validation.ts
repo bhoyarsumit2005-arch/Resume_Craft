@@ -5,10 +5,12 @@ import {
   type TemplateId,
   type AccentColor,
   type FontSize,
+  type FontFamily,
   type SectionKey,
   TEMPLATES,
   ACCENT_COLORS,
   FONT_SIZES,
+  FONT_FAMILIES,
   OPTIONAL_SECTIONS,
   uid,
 } from "../src/lib/resume-types";
@@ -33,6 +35,7 @@ export function sanitizeResume(input: unknown): ResumeData {
   const template = TEMPLATES.some((t) => t.id === body.template) ? (body.template as TemplateId) : base.template;
   const accentColor = ACCENT_COLORS.some((c) => c.id === body.accentColor) ? (body.accentColor as AccentColor) : base.accentColor;
   const fontSize = FONT_SIZES.some((f) => f.id === body.fontSize) ? (body.fontSize as FontSize) : base.fontSize;
+  const fontFamily = FONT_FAMILIES.some((f) => f.id === body.fontFamily) ? (body.fontFamily as FontFamily) : base.fontFamily;
 
   const title = str(body.title, 160).trim() || "Untitled Resume";
 
@@ -57,6 +60,7 @@ export function sanitizeResume(input: unknown): ResumeData {
     template,
     accentColor,
     fontSize,
+    fontFamily,
     personalInfo,
     summary: str(body.summary, 2000),
     education: arr(body.education).map((e) => ({
@@ -122,6 +126,7 @@ export function serializeResume(row: ResumeRow) {
     template: row.template,
     accentColor: row.accentColor,
     fontSize: row.fontSize,
+    fontFamily: row.fontFamily,
     personalInfo: row.personalInfo,
     summary: row.summary,
     education: row.education,

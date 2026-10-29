@@ -47,7 +47,7 @@ export default function DemoPage() {
             <span className="badge mb-3 inline-flex items-center gap-1.5">
               <Sparkles size={12} /> Demo Resume · Sumit Bhoyar
             </span>
-            <h1 className="text-2xl sm:text-3xl font-bold mt-2">A real resume, built with ResumeCraft</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mt-2">A real resume, recreated with ResumeCraft</h1>
             <p className="mt-2 text-gray-500 max-w-lg mx-auto">
               Explore the live preview below, or open the original PDF — then build your own with the same templates.
             </p>

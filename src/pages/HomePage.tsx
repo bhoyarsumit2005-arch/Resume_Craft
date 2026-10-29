@@ -10,7 +10,7 @@ import { TEMPLATES } from "@/lib/resume-types";
 
 const FEATURES = [
   { icon: <PenLine size={22} />, title: "Easy Resume Builder", text: "Guided, section-by-section forms with helpful placeholders — no design skills required." },
-  { icon: <Eye size={22} />, title: "Live Preview", text: "See every keystroke reflected instantly on an A4 page. What you see is exactly what you download." },
+  { icon: <Eye size={22} />, title: "Live Preview", text: "See every keystroke reflected instantly on an A4 page, with the same content carried into your PDF." },
   { icon: <LayoutTemplate size={22} />, title: "ATS-Friendly Templates", text: "Six single-column designs with standard headings and no tables or graphics. Switch anytime — your content stays intact." },
   { icon: <FileDown size={22} />, title: "ATS-Ready PDF Export", text: "One-click A4 PDF with selectable, machine-readable text and smart page breaks." },
   { icon: <ShieldCheck size={22} />, title: "Secure Storage", text: "JWT authentication and hashed passwords keep your account and resumes private." },
@@ -20,7 +20,7 @@ const FEATURES = [
 const STEPS = [
   { icon: <UserPlus size={20} />, title: "Create Account", text: "Sign up free in seconds with just your name and email." },
   { icon: <ClipboardList size={20} />, title: "Enter Your Details", text: "Fill in education, projects, skills, experience and more." },
-  { icon: <Palette size={20} />, title: "Customize Your Resume", text: "Choose a template, accent color and font size that fits you." },
+  { icon: <Palette size={20} />, title: "Customize Your Resume", text: "Choose a template, accent color, font size and ATS-safe font style that fits you." },
   { icon: <Download size={20} />, title: "Download & Share", text: "Export a polished A4 PDF and apply with confidence." },
 ];
 

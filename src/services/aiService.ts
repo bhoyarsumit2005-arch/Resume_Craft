@@ -31,5 +31,5 @@ export const aiService = {
   },
   bullets(input: AiBulletsInput) {
     return api<AiBulletsResult>("/ai/bullets", { method: "POST", body: input });
-  },
+  }
 };

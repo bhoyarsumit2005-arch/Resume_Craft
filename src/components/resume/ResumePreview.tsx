@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { accentHex, fontSizePx, type ResumeData } from "@/lib/resume-types";
+import { accentHex, fontFamilyStack, fontSizePx, type ResumeData } from "@/lib/resume-types";
 import ModernTemplate from "@/templates/ModernTemplate";
 import ClassicTemplate from "@/templates/ClassicTemplate";
 import MinimalTemplate from "@/templates/MinimalTemplate";
@@ -12,7 +12,13 @@ const PAPER_WIDTH = 794; // 210mm at 96dpi
 export const EXPORT_ROOT_ID = "resume-export-root";
 
 export function RenderTemplate({ resume, links = true }: { resume: ResumeData; links?: boolean }) {
-  const props = { resume, accent: accentHex(resume.accentColor), fontSize: fontSizePx(resume.fontSize), links };
+  const props = {
+    resume,
+    accent: accentHex(resume.accentColor),
+    fontSize: fontSizePx(resume.fontSize),
+    fontFamily: fontFamilyStack(resume.fontFamily),
+    links,
+  };
   switch (resume.template) {
     case "classic":
       return <ClassicTemplate {...props} />;

@@ -13,6 +13,7 @@ import type {
   TemplateId,
   AccentColor,
   FontSize,
+  FontFamily,
   SectionKey,
 } from "../src/lib/resume-types";
 
@@ -52,6 +53,7 @@ export interface ResumeDoc {
   template: TemplateId;
   accentColor: AccentColor;
   fontSize: FontSize;
+  fontFamily: FontFamily;
   personalInfo: PersonalInfo;
   summary: string;
   education: Education[];
@@ -74,6 +76,7 @@ const resumeSchema = new Schema<ResumeDoc>(
     template: { type: String, required: true, default: "modern" },
     accentColor: { type: String, required: true, default: "blue" },
     fontSize: { type: String, required: true, default: "medium" },
+    fontFamily: { type: String, required: true, default: "arial" },
     personalInfo: { type: Schema.Types.Mixed, required: true, default: {} },
     summary: { type: String, default: "" },
     education: { type: [Schema.Types.Mixed], default: [] } as SchemaDefinitionProperty<Education[]>,

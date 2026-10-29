@@ -2,7 +2,7 @@
 
 > **Build Your Resume. Showcase Your Skills. Get Career Ready.**
 
-ResumeCraft is a full-stack, production-style resume builder built as a college mini-project. Users register, create multiple resumes, edit them in a two-column editor with an instant **live A4 preview**, switch between **six ATS-friendly templates**, customise accent colour / font size, and export a **multi-page A4 PDF with selectable text** (or print) — all backed by a secure JWT-authenticated REST API (Express) and a MongoDB Atlas database (Mongoose).
+ResumeCraft is a full-stack, production-style resume builder built as a college mini-project. Users register, create multiple resumes, edit them in a two-column editor with an instant **live A4 preview**, switch between **six ATS-friendly templates**, customise accent colour / font size / ATS-safe font family, and export a **multi-page A4 PDF with selectable text** (or print) — all backed by a secure JWT-authenticated REST API (Express) and a MongoDB Atlas database (Mongoose).
 
 ---
 
@@ -13,15 +13,15 @@ ResumeCraft is a full-stack, production-style resume builder built as a college 
 | **Authentication** | Register / Login / Logout, bcrypt password hashing, JWT (httpOnly cookie + Bearer), protected pages & APIs |
 | **Dashboard** | Welcome header, live stats (total resumes, last updated, templates used), resume cards with real thumbnails, empty state |
 | **Resume CRUD** | Create, read, update, delete, **duplicate**, rename — every resume is owned by exactly one user; a new resume is only written to the database on your first edit or **Save**, so abandoned drafts never clutter the dashboard |
-| **Editor** | Personal info (+ photo), summary, education, experience, projects (tech tags), skills (add / remove / reorder), certifications, achievements, languages, social links |
+| **Editor** | Personal info, summary, education, experience, projects (technologies), skills (add / remove / reorder), certifications, achievements, languages, social links |
 | **AI assistant** | **Improve Summary** / **Generate Draft** (summary rewrite via OpenRouter) and **Suggest bullets** for experience entries — logged-in only, with rule-based fallback when AI is unavailable |
 | **Section controls** | Collapsible sections, hide/show any section, empty sections never render in the resume |
 | **Live preview** | Auto-scaled A4 page that updates on every keystroke |
 | **Templates** | Six ATS-friendly, single-column designs — Modern, Classic, Minimal, Executive, Creative and Timeline. All use plain-text contact details, standard section headings, simple bullets and no tables, icons, photos or sidebars. Same data, switch anytime |
-| **Customisation** | 5 accent colours (Blue, Indigo, Green, Black, Purple) and 3 font sizes |
-| **PDF export** | html2canvas-pro + jsPDF, A4, smart page breaks that avoid cutting entries, no UI controls in output; **Print Resume** fallback |
+| **Customisation** | 5 accent colours (Sky Blue, Cerulean Blue, Green, Jet Black, Neon Rose), 3 font sizes, and 6 ATS-safe font families (Arial, Calibri, Helvetica, Verdana, Georgia, Times New Roman) |
+| **PDF export** | jsPDF text generation, A4, automatic page breaks with proper margins, selectable/machine-readable text and no UI controls; **Print Resume** fallback |
 | **Auto-save** | Debounced auto-save with "Saved / Saving… / Unsaved changes" indicator + explicit Save button |
-| **Profile** | Update name, change password, logout |
+| **Profile** | Update name and logout |
 | **Demo mode** | `/demo` — view a full sample resume preview without an account |
 | **UX polish** | Toast notifications, loading states, error states, empty states, 404 page, responsive (desktop / tablet / mobile), keyboard-friendly, semantic HTML |
 
@@ -37,7 +37,7 @@ A modern **MERN-style** split: a Vite + React SPA talking to a standalone Expres
 - Context API (`AuthContext`, `ToastContext`)
 - Tailwind CSS v4 + CSS variables for theming
 - lucide-react icons
-- html2canvas-pro + jsPDF for PDF export
+- jsPDF text generation for selectable, ATS-readable PDFs
 
 **Backend**
 
@@ -75,7 +75,7 @@ A modern **MERN-style** split: a Vite + React SPA talking to a standalone Expres
 │   ├── context/             # AuthContext, ToastContext
 │   ├── services/            # api.ts, authService.ts, resumeService.ts, aiService.ts
 │   ├── hooks/               # useResume.ts
-│   ├── utils/               # pdf.ts (A4 export + page breaks), summary.ts (Improve Summary)
+│   ├── utils/               # pdf.ts (ATS text PDF + page breaks), summary.ts (Improve Summary)
 │   └── lib/                 # resume-types.ts (types, defaults, sample data)
 ├── dist/                    # Built SPA (served by Express in production)
 └── vite.config.ts           # Vite :5173, /api proxy → :3001
@@ -200,7 +200,7 @@ All `429` responses are JSON and carry a `Retry-After` header.
 
 **users** — `_id`, `name`, `email` (unique), `password` (bcrypt hash), `isVerified`, `registrationOtp`/`registrationOtpExpiry`, `otp`/`otpExpiry`, `tokenVersion`, `createdAt`, `updatedAt`
 
-**resumes** — `_id`, `userId` (ref → users), `title`, `template`, `accentColor`, `fontSize`, `personalInfo`, `summary`, `education[]`, `experience[]`, `projects[]`, `skills[]`, `certifications[]`, `achievements[]`, `languages[]`, `socialLinks[]`, `hiddenSections[]`, `createdAt`, `updatedAt`
+**resumes** — `_id`, `userId` (ref → users), `title`, `template`, `accentColor`, `fontSize`, `fontFamily`, `personalInfo`, `summary`, `education[]`, `experience[]`, `projects[]`, `skills[]`, `certifications[]`, `achievements[]`, `languages[]`, `socialLinks[]`, `hiddenSections[]`, `createdAt`, `updatedAt`
 
 Resumes are stored as JSON documents (mirroring the editor's data shape), and every query checks `userId` so users can only ever access their own data.
 
@@ -217,7 +217,7 @@ _Add screenshots of the landing page, dashboard, editor with live preview, and t
 - Auth: register, duplicate email rejected, login, invalid credentials → 401, protected routes → 401, logout
 - Resume: create, list, read, update, rename, duplicate, delete; cross-user access → 404
 - Editor: all sections, hide/show, template & accent switching without data loss, live preview
-- PDF: A4 pages, smart page breaks, no UI controls, print fallback
+- PDF: A4 pages, automatic page breaks, selectable/ATS-readable text, no UI controls, print fallback
 - Security: bcrypt hashes in DB, JWT, ownership checks, input sanitisation
 
 ---

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { LogOut, Save, KeyRound, User as UserIcon, Mail, Calendar } from "lucide-react";
+import { LogOut, Save, User as UserIcon, Mail, Calendar } from "lucide-react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Input from "@/components/common/Input";
 import Button from "@/components/common/Button";
-import PasswordInput from "@/components/auth/PasswordInput";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/context/ToastContext";
 import { authService } from "@/services/authService";
@@ -18,9 +17,6 @@ function ProfileContent() {
   const navigate = useNavigate();
   const [name, setName] = useState(user?.name ?? "");
   const [savingName, setSavingName] = useState(false);
-  const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
-  const [pwErr, setPwErr] = useState<{ current?: string; next?: string; confirm?: string }>({});
-  const [savingPw, setSavingPw] = useState(false);
 
   useEffect(() => setName(user?.name ?? ""), [user]);
 
@@ -36,26 +32,6 @@ function ProfileContent() {
       toast.error(err instanceof Error ? err.message : "Could not update profile.");
     } finally {
       setSavingName(false);
-    }
-  };
-
-  const savePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const errs: typeof pwErr = {};
-    if (!pw.current) errs.current = "Enter your current password";
-    if (pw.next.length < 6) errs.next = "At least 6 characters";
-    if (pw.next !== pw.confirm) errs.confirm = "Passwords do not match";
-    setPwErr(errs);
-    if (Object.keys(errs).length) return;
-    setSavingPw(true);
-    try {
-      await authService.updateProfile({ currentPassword: pw.current, newPassword: pw.next });
-      setPw({ current: "", next: "", confirm: "" });
-      toast.success("Password changed successfully.");
-    } catch (err) {
-      setPwErr({ current: err instanceof Error ? err.message : "Could not change password" });
-    } finally {
-      setSavingPw(false);
     }
   };
 
@@ -90,20 +66,6 @@ function ProfileContent() {
         <div className="flex justify-end">
           <Button type="submit" loading={savingName} icon={<Save size={16} />} disabled={name.trim() === user?.name}>
             Save changes
-          </Button>
-        </div>
-      </form>
-
-      <form onSubmit={savePassword} className="card p-6 space-y-4">
-        <h2 className="font-semibold flex items-center gap-2"><KeyRound size={18} className="text-indigo-600" /> Change password</h2>
-        <PasswordInput label="Current Password" name="current" autoComplete="current-password" value={pw.current} onChange={(e) => setPw({ ...pw, current: e.target.value })} error={pwErr.current} />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <PasswordInput label="New Password" name="next" autoComplete="new-password" value={pw.next} onChange={(e) => setPw({ ...pw, next: e.target.value })} error={pwErr.next} />
-          <PasswordInput label="Confirm New Password" name="confirm" autoComplete="new-password" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} error={pwErr.confirm} />
-        </div>
-        <div className="flex justify-end">
-          <Button type="submit" variant="dark" loading={savingPw} icon={<KeyRound size={16} />}>
-            Update password
           </Button>
         </div>
       </form>

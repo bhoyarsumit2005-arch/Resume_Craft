@@ -2,9 +2,6 @@ import type { CSSProperties, ReactNode } from "react";
 import { Bullets, Placeholder, contactItems, dateRange, show, type TemplateProps } from "./shared";
 import { ensureHttp, prettyUrl, type TemplateId } from "@/lib/resume-types";
 
-const SANS = "Arial, Helvetica, sans-serif";
-const SERIF = "Georgia, 'Times New Roman', serif";
-
 interface VariantStyle {
   page: CSSProperties;
   header: CSSProperties;
@@ -23,16 +20,18 @@ interface VariantStyle {
  * Every ATS template uses the same accessible, single-column structure:
  * plain text contact details, standard section headings, simple bullets,
  * no tables, no icons, no photos and no sidebars.
+ *
+ * The font stack comes from the editor's ATS-safe font picker and is applied
+ * to the whole page so the preview and the exported PDF match.
  */
-function getStyle(variant: TemplateId, accent: string): VariantStyle {
+function getStyle(variant: TemplateId, accent: string, family: string): VariantStyle {
   const base: VariantStyle = {
-    page: { fontFamily: SANS, color: "#111827", padding: "44px 46px" },
+    page: { fontFamily: family, color: "#111827", padding: "44px 46px" },
     header: { borderBottom: `2px solid ${accent}`, paddingBottom: 12 },
-    name: { fontFamily: SANS, fontSize: "2.05em", fontWeight: 800, letterSpacing: "0.01em", color: "#111827", lineHeight: 1.12, margin: 0 },
-    title: { fontFamily: SANS, fontSize: "1em", fontWeight: 600, color: accent, margin: "5px 0 0" },
-    contacts: { fontFamily: SANS, fontSize: "0.85em", color: "#374151", margin: "8px 0 0", lineHeight: 1.5 },
+    name: { fontSize: "2.05em", fontWeight: 800, letterSpacing: "0.01em", color: "#111827", lineHeight: 1.12, margin: 0 },
+    title: { fontSize: "1em", fontWeight: 600, color: accent, margin: "5px 0 0" },
+    contacts: { fontSize: "0.85em", color: "#374151", margin: "8px 0 0", lineHeight: 1.5 },
     heading: {
-      fontFamily: SANS,
       fontSize: "0.8em",
       fontWeight: 700,
       letterSpacing: "0.12em",
@@ -43,34 +42,30 @@ function getStyle(variant: TemplateId, accent: string): VariantStyle {
       margin: "1.25em 0 0.55em",
     },
     entry: { marginBottom: "0.85em" },
-    entryTitle: { fontFamily: SANS, fontSize: "1.02em", fontWeight: 700, color: "#111827" },
-    meta: { fontFamily: SANS, fontSize: "0.86em", color: "#4b5563", whiteSpace: "nowrap" },
-    body: { fontFamily: SANS, fontSize: "1em", color: "#111827", lineHeight: 1.55, margin: 0 },
-    small: { fontFamily: SANS, fontSize: "0.9em", color: "#4b5563", lineHeight: 1.5 },
+    entryTitle: { fontSize: "1.02em", fontWeight: 700, color: "#111827" },
+    meta: { fontSize: "0.86em", color: "#4b5563", whiteSpace: "nowrap" },
+    body: { fontSize: "1em", color: "#111827", lineHeight: 1.55, margin: 0 },
+    small: { fontSize: "0.9em", color: "#4b5563", lineHeight: 1.5 },
   };
 
   switch (variant) {
     case "classic":
       return {
         ...base,
-        page: { ...base.page, fontFamily: SERIF, color: "#111", padding: "44px 48px" },
+        page: { ...base.page, color: "#111", padding: "44px 48px" },
         header: { textAlign: "center", borderBottom: "3px double #111", paddingBottom: 14 },
-        name: { ...base.name, fontFamily: SERIF, fontSize: "1.95em", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" },
-        title: { ...base.title, fontFamily: SERIF, fontStyle: "italic", color: "#111" },
-        contacts: { ...base.contacts, fontFamily: SERIF, fontSize: "0.87em", color: "#222", textAlign: "center" },
+        name: { ...base.name, fontSize: "1.95em", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" },
+        title: { ...base.title, fontStyle: "italic", color: "#111" },
+        contacts: { ...base.contacts, fontSize: "0.87em", color: "#222", textAlign: "center" },
         heading: {
           ...base.heading,
-          fontFamily: SERIF,
           fontSize: "0.9em",
           letterSpacing: "0.08em",
           color: "#111",
           borderBottom: "1px solid #111",
           paddingBottom: 3,
         },
-        entryTitle: { ...base.entryTitle, fontFamily: SERIF },
-        meta: { ...base.meta, fontFamily: SERIF, fontStyle: "italic" },
-        body: { ...base.body, fontFamily: SERIF },
-        small: { ...base.small, fontFamily: SERIF },
+        meta: { ...base.meta, fontStyle: "italic" },
       };
     case "minimal":
       return {
@@ -99,22 +94,18 @@ function getStyle(variant: TemplateId, accent: string): VariantStyle {
     case "executive":
       return {
         ...base,
-        page: { ...base.page, fontFamily: SERIF, padding: "40px 46px" },
+        page: { ...base.page, padding: "40px 46px" },
         header: { borderBottom: `3px solid ${accent}`, paddingBottom: 14 },
-        name: { ...base.name, fontFamily: SERIF, fontSize: "2.1em", letterSpacing: "0.02em" },
+        name: { ...base.name, fontSize: "2.1em", letterSpacing: "0.02em" },
         title: { ...base.title, fontWeight: 700, fontSize: "0.95em" },
         heading: {
           ...base.heading,
-          fontFamily: SERIF,
           fontSize: "0.84em",
           letterSpacing: "0.12em",
           borderBottom: `2px solid ${accent}`,
           paddingBottom: 4,
           margin: "1.3em 0 0.55em",
         },
-        entryTitle: { ...base.entryTitle, fontFamily: SERIF },
-        body: { ...base.body, fontFamily: SERIF },
-        small: { ...base.small, fontFamily: SERIF },
       };
     case "creative":
       return {
@@ -157,19 +148,24 @@ function getStyle(variant: TemplateId, accent: string): VariantStyle {
   }
 }
 
-export default function AtsTemplate({ resume, accent, fontSize, links = true, variant }: TemplateProps & { variant: TemplateId }) {
+export default function AtsTemplate({
+  resume,
+  accent,
+  fontSize,
+  fontFamily,
+  links = true,
+  variant,
+}: TemplateProps & { variant: TemplateId }) {
   const p = resume.personalInfo;
   const contacts = contactItems(resume);
-  const s = getStyle(variant, accent);
+  const s = getStyle(variant, accent, fontFamily);
   const dateFirst = variant === "timeline";
 
-  const ContactText = ({ text }: { text: string }) => <>{text}</>;
-
   const contactNode = (c: (typeof contacts)[number]) => {
-    if (!c.href || !links) return <ContactText text={c.text} />;
+    if (!c.href || !links) return <>{c.text}</>;
     return (
       <a href={c.href} target="_blank" rel="noreferrer" style={{ color: "inherit" }}>
-        <ContactText text={c.text} />
+        {c.text}
       </a>
     );
   };

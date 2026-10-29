@@ -37,6 +37,7 @@ export default function ResumeForm({ resume, onChange, onTemplateChange }: Props
           }}
           onAccent={(accentColor) => onChange({ accentColor })}
           onFontSize={(fontSize) => onChange({ fontSize })}
+          onFontFamily={(fontFamily) => onChange({ fontFamily })}
           onToggleSection={toggleSection}
         />
       </SectionCard>

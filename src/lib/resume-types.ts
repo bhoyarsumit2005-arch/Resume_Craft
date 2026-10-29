@@ -1,6 +1,7 @@
 export type TemplateId = "modern" | "classic" | "minimal" | "executive" | "creative" | "timeline";
 export type AccentColor = "blue" | "indigo" | "green" | "black" | "purple";
 export type FontSize = "small" | "medium" | "large";
+export type FontFamily = "arial" | "calibri" | "helvetica" | "georgia" | "times" | "verdana";
 
 export interface PersonalInfo {
   fullName: string;
@@ -87,6 +88,7 @@ export interface ResumeData {
   template: TemplateId;
   accentColor: AccentColor;
   fontSize: FontSize;
+  fontFamily: FontFamily;
   personalInfo: PersonalInfo;
   summary: string;
   education: Education[];
@@ -167,6 +169,19 @@ export const FONT_SIZES: { id: FontSize; label: string; px: number }[] = [
   { id: "large", label: "L", px: 15 },
 ];
 
+/**
+ * ATS-safe font families. Every option is a standard system font that
+ * applicant tracking systems can parse reliably; no web fonts are loaded.
+ */
+export const FONT_FAMILIES: { id: FontFamily; label: string; stack: string; kind: "sans" | "serif" }[] = [
+  { id: "arial", label: "Arial", stack: "Arial, Helvetica, sans-serif", kind: "sans" },
+  { id: "calibri", label: "Calibri", stack: "Calibri, 'Segoe UI', Arial, sans-serif", kind: "sans" },
+  { id: "helvetica", label: "Helvetica", stack: "Helvetica, Arial, sans-serif", kind: "sans" },
+  { id: "verdana", label: "Verdana", stack: "Verdana, Geneva, Arial, sans-serif", kind: "sans" },
+  { id: "georgia", label: "Georgia", stack: "Georgia, 'Times New Roman', serif", kind: "serif" },
+  { id: "times", label: "Times New Roman", stack: "'Times New Roman', Times, Georgia, serif", kind: "serif" },
+];
+
 export const OPTIONAL_SECTIONS: { key: SectionKey; label: string }[] = [
   { key: "summary", label: "Summary" },
   { key: "education", label: "Education" },
@@ -185,6 +200,16 @@ export function accentHex(color: AccentColor | string): string {
 
 export function fontSizePx(size: FontSize | string): number {
   return FONT_SIZES.find((f) => f.id === size)?.px ?? 13.5;
+}
+
+/** CSS font stack for the selected ATS-safe family (falls back to Arial). */
+export function fontFamilyStack(family: FontFamily | string | undefined): string {
+  return FONT_FAMILIES.find((f) => f.id === family)?.stack ?? FONT_FAMILIES[0].stack;
+}
+
+/** Whether the selected family is serif — used to pick a matching PDF font. */
+export function fontFamilyKind(family: FontFamily | string | undefined): "sans" | "serif" {
+  return FONT_FAMILIES.find((f) => f.id === family)?.kind ?? "sans";
 }
 
 export function templateName(id: string): string {
@@ -215,6 +240,7 @@ export function createEmptyResume(overrides: Partial<ResumeData> = {}): ResumeDa
     template: "modern",
     accentColor: "blue",
     fontSize: "medium",
+    fontFamily: "arial",
     personalInfo: emptyPersonalInfo(),
     summary: "",
     education: [],
@@ -253,7 +279,7 @@ export function createSampleResume(): ResumeData {
       photo: "",
     },
     summary:
-      "To obtain an internship or entry-level opportunity where I can apply my programming and web development skills, gain practical experience, and contribute to the growth of the organization while continuously improving my technical knowledge. Skilled in JavaScript, React.js, Node.js, Express.js. Built 3 hands-on projects demonstrating practical problem-solving ability.",
+      "To obtain an internship or entry-level opportunity where I can apply my programming and web development skills, gain practical experience, and contribute to the growth of the organization while continuously improving my technical knowledge. Skilled in JavaScript, React.js, Node.js, Express.js. Built multiple hands-on projects demonstrating practical problem-solving ability.",
     education: [
       {
         id: uid(),
@@ -284,7 +310,7 @@ export function createSampleResume(): ResumeData {
         description:
           "Smart resume builder with live preview, multiple templates, JWT authentication, and one-click PDF export.",
         technologies: ["React", "Node.js", "JWT", "jsPDF", "TypeScript"],
-        githubUrl: "https://github.com/bhoyarsumit2005-arch/ResumeCraft",
+        githubUrl: "https://github.com/bhoyarsumit2005-arch/Resume_Craft",
         liveUrl: "",
       },
       {
@@ -293,7 +319,7 @@ export function createSampleResume(): ResumeData {
         description:
           "Developed SigmaGPT, an AI-powered chat application using React.js, Node.js, Express.js, MongoDB, and the Groq API to generate AI responses. Implemented JWT-based authentication, secure user sessions, and user-specific chat history with backend access control.",
         technologies: ["React", "Vite", "Node.js", "Express.js", "MongoDB", "Groq API", "JWT Authentication"],
-        githubUrl: "https://github.com/bhoyarsumit2005-arch/SigmaGPT",
+        githubUrl: "https://github.com/bhoyarsumit2005-arch/Sigma_GPT",
         liveUrl: "",
       },
     ],

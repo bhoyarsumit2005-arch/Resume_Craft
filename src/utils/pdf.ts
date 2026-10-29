@@ -5,7 +5,7 @@
  * applicant tracking systems can parse names, roles, dates and keywords.
  */
 
-import { accentHex, prettyUrl, sectionVisible, type ResumeData } from "@/lib/resume-types";
+import { accentHex, fontFamilyKind, prettyUrl, sectionVisible, type ResumeData } from "@/lib/resume-types";
 
 const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
@@ -36,6 +36,8 @@ export async function exportResumePdf(filename: string, resume: ResumeData): Pro
 
   const accent = accentHex(resume.accentColor);
   const accentRgb = hexToRgb(accent);
+  // jsPDF ships the ATS-standard PDF fonts only: Helvetica (sans) and Times (serif).
+  const pdfFont = fontFamilyKind(resume.fontFamily) === "serif" ? "times" : "helvetica";
   const ink: Rgb = [17, 24, 39];
   const muted: Rgb = [75, 85, 99];
 
@@ -60,7 +62,7 @@ export async function exportResumePdf(filename: string, resume: ResumeData): Pro
   };
 
   const setFont = (style: FontStyle, size: number, color: Rgb) => {
-    doc.setFont("helvetica", style);
+    doc.setFont(pdfFont, style);
     doc.setFontSize(size);
     doc.setTextColor(color[0], color[1], color[2]);
   };

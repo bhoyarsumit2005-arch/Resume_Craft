@@ -7,6 +7,8 @@ export interface TemplateProps {
   resume: ResumeData;
   accent: string;
   fontSize: number;
+  /** CSS font stack for the ATS-safe family chosen in the editor. */
+  fontFamily: string;
   /** When false, URLs render as plain text instead of <a> tags (used in thumbnails to avoid nested anchors). */
   links?: boolean;
 }

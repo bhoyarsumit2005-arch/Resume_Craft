@@ -1,16 +1,29 @@
 import { Check } from "lucide-react";
 import TemplateCard from "./TemplateCard";
-import { ACCENT_COLORS, FONT_SIZES, OPTIONAL_SECTIONS, TEMPLATES, type AccentColor, type FontSize, type ResumeData, type SectionKey, type TemplateId } from "@/lib/resume-types";
+import {
+  ACCENT_COLORS,
+  FONT_FAMILIES,
+  FONT_SIZES,
+  OPTIONAL_SECTIONS,
+  TEMPLATES,
+  type AccentColor,
+  type FontFamily,
+  type FontSize,
+  type ResumeData,
+  type SectionKey,
+  type TemplateId,
+} from "@/lib/resume-types";
 
 interface Props {
   resume: ResumeData;
   onTemplate: (t: TemplateId) => void;
   onAccent: (c: AccentColor) => void;
   onFontSize: (f: FontSize) => void;
+  onFontFamily: (f: FontFamily) => void;
   onToggleSection: (k: SectionKey) => void;
 }
 
-export default function TemplateSelector({ resume, onTemplate, onAccent, onFontSize, onToggleSection }: Props) {
+export default function TemplateSelector({ resume, onTemplate, onAccent, onFontSize, onFontFamily, onToggleSection }: Props) {
   return (
     <div className="space-y-5">
       <div>
@@ -62,6 +75,37 @@ export default function TemplateSelector({ resume, onTemplate, onAccent, onFontS
             ))}
           </div>
         </div>
+      </div>
+
+      <div>
+        <p className="label">Font Style</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {FONT_FAMILIES.map((f) => {
+            const active = (resume.fontFamily ?? "arial") === f.id;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => onFontFamily(f.id)}
+                aria-pressed={active}
+                className={`rounded-lg border px-3 py-2 text-left transition-colors ${
+                  active ? "border-indigo-500 bg-indigo-50" : "border-gray-200 bg-white hover:bg-gray-50"
+                }`}
+              >
+                <span className="block text-lg leading-tight text-gray-900" style={{ fontFamily: f.stack }}>
+                  Aa
+                </span>
+                <span className={`mt-0.5 block text-xs ${active ? "font-semibold text-indigo-700" : "text-gray-600"}`}>
+                  {f.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <p className="field-hint mt-1">
+          Standard ATS-safe system fonts — no web fonts. Serif choices export as Times, sans choices as Helvetica, so the
+          PDF matches the preview.
+        </p>
       </div>
 
       <div>
