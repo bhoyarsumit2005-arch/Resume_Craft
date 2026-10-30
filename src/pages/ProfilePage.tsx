@@ -45,16 +45,18 @@ function ProfileContent() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10 space-y-6">
-      <div className="card p-6 flex flex-wrap items-center gap-5">
-        <div className="h-16 w-16 rounded-full grid place-items-center text-white text-xl font-bold" style={{ background: "var(--color-primary)" }}>
-          {initials}
+      <div className="card p-6 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
+        <div className="flex items-center gap-4 min-w-0 sm:flex-1">
+          <div className="h-16 w-16 shrink-0 rounded-full grid place-items-center text-white text-xl font-bold" style={{ background: "var(--color-primary)" }}>
+            {initials}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-bold truncate">{user?.name}</h1>
+            <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-0.5 min-w-0"><Mail size={14} className="shrink-0" /> <span className="truncate">{user?.email}</span></p>
+            {user && <p className="text-xs text-gray-400 flex items-center gap-1.5 mt-1"><Calendar size={12} className="shrink-0" /> Member since {formatDate(user.createdAt)}</p>}
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="text-xl font-bold truncate">{user?.name}</h1>
-          <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-0.5"><Mail size={14} /> {user?.email}</p>
-          {user && <p className="text-xs text-gray-400 flex items-center gap-1.5 mt-1"><Calendar size={12} /> Member since {formatDate(user.createdAt)}</p>}
-        </div>
-        <Button variant="secondary" onClick={handleLogout} icon={<LogOut size={16} />}>
+        <Button variant="secondary" className="w-full sm:w-auto sm:ml-auto" onClick={handleLogout} icon={<LogOut size={16} />}>
           Logout
         </Button>
       </div>

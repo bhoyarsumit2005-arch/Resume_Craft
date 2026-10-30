@@ -2,6 +2,7 @@ import {
   createEmptyResume,
   emptyPersonalInfo,
   type ResumeData,
+  type PersonalInfo,
   type TemplateId,
   type AccentColor,
   type FontSize,
@@ -22,6 +23,18 @@ const str = (v: unknown, max = 2000): string => (typeof v === "string" ? v.slice
 const bool = (v: unknown): boolean => v === true;
 const arr = (v: unknown): Obj[] => (Array.isArray(v) ? (v.filter((x) => x && typeof x === "object") as Obj[]).slice(0, 50) : []);
 const id = (v: unknown): string => (typeof v === "string" && v ? v.slice(0, 40) : uid());
+
+/** Picks a value only when it is one of the allowed enum members. */
+const oneOf = <T extends string>(value: unknown, allowed: readonly T[], fallback: T): T =>
+  allowed.includes(value as T) ? (value as T) : fallback;
+
+/** Date → ISO string, tolerating missing/invalid values from older documents. */
+const iso = (value: unknown, fallback: Date): string => {
+  const date = value instanceof Date ? value : new Date(typeof value === "string" || typeof value === "number" ? value : NaN);
+  return Number.isNaN(date.getTime()) ? fallback.toISOString() : date.toISOString();
+};
+
+const list = <T>(value: readonly T[] | undefined | null): T[] => (Array.isArray(value) ? [...value] : []);
 
 /**
  * Sanitizes & validates an incoming resume payload from the client.
@@ -118,27 +131,51 @@ export function sanitizeResume(input: unknown): ResumeData {
   };
 }
 
+/**
+ * Shapes a database row into the JSON contract the client expects.
+ * Older documents may predate `fontFamily`, `hiddenSections` or even
+ * timestamps, so every field is normalised instead of passed through —
+ * one legacy row must never turn a list request into a 500.
+ */
 export function serializeResume(row: ResumeRow) {
+  const now = new Date();
+  const pi = (row.personalInfo ?? {}) as Partial<PersonalInfo>;
+
+  const personalInfo: PersonalInfo = {
+    ...emptyPersonalInfo(),
+    fullName: str(pi.fullName, 120),
+    title: str(pi.title, 160),
+    email: str(pi.email, 160),
+    phone: str(pi.phone, 40),
+    location: str(pi.location, 120),
+    linkedin: str(pi.linkedin, 300),
+    github: str(pi.github, 300),
+    portfolio: str(pi.portfolio, 300),
+    photo: str(pi.photo, 400_000),
+  };
+
+  const hiddenSections = list(row.hiddenSections).filter((s) => OPTIONAL_SECTIONS.some((o) => o.key === s)) as SectionKey[];
+
   return {
-    id: row._id.toString(),
+    id: String(row._id),
     userId: String(row.userId),
-    title: row.title,
-    template: row.template,
-    accentColor: row.accentColor,
-    fontSize: row.fontSize,
-    fontFamily: row.fontFamily,
-    personalInfo: row.personalInfo,
-    summary: row.summary,
-    education: row.education,
-    experience: row.experience,
-    projects: row.projects,
-    skills: row.skills,
-    certifications: row.certifications,
-    achievements: row.achievements,
-    languages: row.languages,
-    socialLinks: row.socialLinks,
-    hiddenSections: row.hiddenSections,
-    createdAt: new Date(row.createdAt as unknown as string).toISOString(),
-    updatedAt: new Date(row.updatedAt as unknown as string).toISOString(),
+    title: str(row.title, 160).trim() || "Untitled Resume",
+    template: oneOf(row.template, TEMPLATES.map((t) => t.id), "modern"),
+    accentColor: oneOf(row.accentColor, ACCENT_COLORS.map((c) => c.id), "blue"),
+    fontSize: oneOf(row.fontSize, FONT_SIZES.map((f) => f.id), "medium"),
+    fontFamily: oneOf(row.fontFamily, FONT_FAMILIES.map((f) => f.id), "arial"),
+    personalInfo,
+    summary: str(row.summary, 2000),
+    education: list(row.education),
+    experience: list(row.experience),
+    projects: list(row.projects),
+    skills: list(row.skills),
+    certifications: list(row.certifications),
+    achievements: list(row.achievements),
+    languages: list(row.languages),
+    socialLinks: list(row.socialLinks),
+    hiddenSections,
+    createdAt: iso(row.createdAt, now),
+    updatedAt: iso(row.updatedAt, now),
   };
 }

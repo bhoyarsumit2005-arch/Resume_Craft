@@ -1,5 +1,21 @@
 export type TemplateId = "modern" | "classic" | "minimal" | "executive" | "creative" | "timeline";
-export type AccentColor = "blue" | "indigo" | "green" | "black" | "purple";
+export type AccentColor =
+  | "blue"
+  | "indigo"
+  | "purple"
+  | "green"
+  | "black"
+  | "slate"
+  | "teal"
+  | "ocean"
+  | "plum"
+  | "wine"
+  | "bronze"
+  | "olive"
+  | "copper"
+  | "steel"
+  | "ink"
+  | "stone";
 export type FontSize = "small" | "medium" | "large";
 export type FontFamily = "arial" | "calibri" | "helvetica" | "georgia" | "times" | "verdana";
 
@@ -156,11 +172,22 @@ export const TEMPLATES: { id: TemplateId; name: string; description: string; tag
 ];
 
 export const ACCENT_COLORS: { id: AccentColor; label: string; hex: string }[] = [
-  { id: "blue", label: "Sky Blue", hex: "#2baccb" },
-  { id: "indigo", label: "Cerulean Blue", hex: "#007ba7" },
-  { id: "green", label: "Green", hex: "#059669" },
-  { id: "black", label: "Jet Black", hex: "#0a0a0a" },
-  { id: "purple", label: "Neon Rose", hex: "#ff4f9a" },
+  { id: "blue", label: "Midnight Navy", hex: "#0f172a" },
+  { id: "indigo", label: "Champagne Gold", hex: "#b45309" },
+  { id: "purple", label: "Burgundy", hex: "#7f1d1d" },
+  { id: "wine", label: "Wine", hex: "#881337" },
+  { id: "plum", label: "Plum", hex: "#6b21a8" },
+  { id: "slate", label: "Slate Blue", hex: "#1e3a8a" },
+  { id: "ocean", label: "Ocean Blue", hex: "#155e75" },
+  { id: "teal", label: "Deep Teal", hex: "#0f766e" },
+  { id: "green", label: "Forest Green", hex: "#14532d" },
+  { id: "olive", label: "Olive", hex: "#3f6212" },
+  { id: "bronze", label: "Bronze", hex: "#78350f" },
+  { id: "copper", label: "Copper", hex: "#9a3412" },
+  { id: "steel", label: "Steel Grey", hex: "#475569" },
+  { id: "black", label: "Charcoal", hex: "#334155" },
+  { id: "stone", label: "Stone", hex: "#44403c" },
+  { id: "ink", label: "Ink Black", hex: "#0a0a0a" },
 ];
 
 export const FONT_SIZES: { id: FontSize; label: string; px: number }[] = [

@@ -24,6 +24,8 @@ interface Props {
 }
 
 export default function TemplateSelector({ resume, onTemplate, onAccent, onFontSize, onFontFamily, onToggleSection }: Props) {
+  const accentLabel = ACCENT_COLORS.find((c) => c.id === resume.accentColor)?.label ?? ACCENT_COLORS[0].label;
+
   return (
     <div className="space-y-5">
       <div>
@@ -39,41 +41,44 @@ export default function TemplateSelector({ resume, onTemplate, onAccent, onFontS
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
+      <div>
+        <div className="flex items-baseline justify-between gap-3">
           <p className="label">Accent Color</p>
-          <div className="flex gap-2">
-            {ACCENT_COLORS.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => onAccent(c.id)}
-                title={c.label}
-                aria-label={`${c.label} accent`}
-                aria-pressed={resume.accentColor === c.id}
-                className="h-8 w-8 rounded-full grid place-items-center text-white transition-transform hover:scale-110 focus-visible:outline-2 focus-visible:outline-indigo-500"
-                style={{ background: c.hex, boxShadow: resume.accentColor === c.id ? `0 0 0 2px #fff, 0 0 0 4px ${c.hex}` : undefined }}
-              >
-                {resume.accentColor === c.id && <Check size={14} />}
-              </button>
-            ))}
-          </div>
+          <span className="text-xs font-medium text-gray-500">{accentLabel}</span>
         </div>
-        <div>
-          <p className="label">Font Size</p>
-          <div className="inline-flex rounded-lg border overflow-hidden" style={{ borderColor: "var(--color-border)" }}>
-            {FONT_SIZES.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => onFontSize(f.id)}
-                aria-pressed={resume.fontSize === f.id}
-                className={`px-4 py-1.5 text-sm font-semibold transition-colors ${resume.fontSize === f.id ? "bg-indigo-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {ACCENT_COLORS.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => onAccent(c.id)}
+              title={c.label}
+              aria-label={`${c.label} accent`}
+              aria-pressed={resume.accentColor === c.id}
+              className="h-8 w-8 rounded-full grid place-items-center text-white transition-transform hover:scale-110 focus-visible:outline-2 focus-visible:outline-indigo-500"
+              style={{ background: c.hex, boxShadow: resume.accentColor === c.id ? `0 0 0 2px #fff, 0 0 0 4px ${c.hex}` : undefined }}
+            >
+              {resume.accentColor === c.id && <Check size={14} />}
+            </button>
+          ))}
+        </div>
+        <p className="field-hint mt-2">16 professional accents. Headings, rules and links use the selected colour.</p>
+      </div>
+
+      <div>
+        <p className="label">Font Size</p>
+        <div className="inline-flex rounded-lg border overflow-hidden" style={{ borderColor: "var(--color-border)" }}>
+          {FONT_SIZES.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => onFontSize(f.id)}
+              aria-pressed={resume.fontSize === f.id}
+              className={`px-4 py-1.5 text-sm font-semibold transition-colors ${resume.fontSize === f.id ? "bg-indigo-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}
+            >
+              {f.label}
+            </button>
+          ))}
         </div>
       </div>
 

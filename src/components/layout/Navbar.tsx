@@ -7,7 +7,7 @@ import { useToast } from "@/context/ToastContext";
 export function Logo({ dark = false }: { dark?: boolean }) {
   return (
     <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-tight" aria-label="ResumeCraft home">
-      <span className="h-8 w-8 rounded-lg grid place-items-center text-white" style={{ background: "var(--color-accent)" }}>
+      <span className="h-8 w-8 rounded-lg grid place-items-center" style={{ background: "var(--color-accent)", color: "var(--color-primary)" }}>
         <FileText size={17} />
       </span>
       <span style={{ color: dark ? "var(--color-primary)" : "#fff" }}>ResumeCraft</span>
@@ -90,7 +90,7 @@ export default function Navbar() {
 
   const navBg = isLanding && !scrolled
     ? "bg-transparent"
-    : "bg-[#1e1b4b] backdrop-blur-xl shadow-lg";
+    : "bg-[#0f172a] backdrop-blur-xl shadow-lg";
 
   const linkClass = (href: string) => {
     const active = pathname === href;
@@ -137,7 +137,7 @@ export default function Navbar() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         <Logo dark={isLanding && !scrolled} />
 
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden lg:flex items-center gap-1">
           {navLinks.map((l) => (
             <Link key={l.href} to={l.href} className={linkClass(l.href)} onClick={(e) => handleLandingLink(e, l.href)}>
               {l.icon ?? null}
@@ -146,7 +146,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           {actions}
 
           {user && !isLanding && (
@@ -162,7 +162,7 @@ export default function Navbar() {
               </button>
 
               {profileOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#1e1b4b] backdrop-blur-xl border border-white/15 shadow-2xl py-2 z-50">
+                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#0f172a] backdrop-blur-xl border border-white/15 shadow-2xl py-2 z-50">
                   <div className="px-4 py-2 border-b border-white/10">
                     <p className="text-sm font-medium text-white truncate">{user.name}</p>
                     <p className="text-xs text-white/50 truncate">{user.email}</p>
@@ -204,7 +204,7 @@ export default function Navbar() {
 
         <button
           type="button"
-          className={`md:hidden p-2 rounded-lg transition-colors ${isLanding && !scrolled ? "text-gray-700 hover:text-gray-900 hover:bg-gray-100" : "text-white/80 hover:text-white hover:bg-white/10"}`}
+          className={`lg:hidden p-2 rounded-lg transition-colors ${isLanding && !scrolled ? "text-gray-700 hover:text-gray-900 hover:bg-gray-100" : "text-white/80 hover:text-white hover:bg-white/10"}`}
           onClick={() => setMenuOpen((o) => !o)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
@@ -214,7 +214,7 @@ export default function Navbar() {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden bg-[#1e1b4b] backdrop-blur-xl border-t border-white/15 px-4 py-4 space-y-1 shadow-2xl">
+        <div className="lg:hidden bg-[#0f172a] backdrop-blur-xl border-t border-white/15 px-4 py-4 space-y-1 shadow-2xl">
           {navLinks.map((l) => (
             <Link
               key={l.href}
@@ -229,7 +229,15 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          <div className="flex items-center gap-2 pt-3 mt-2 border-t border-white/10">
+          {user && !isLanding && (
+            <button
+              onClick={handleLogout}
+              className="flex w-full items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-red-300 hover:text-red-200 hover:bg-white/10 transition-colors"
+            >
+              <LogOut size={16} /> Logout
+            </button>
+          )}
+          <div className="flex flex-wrap items-center gap-2 pt-3 mt-2 border-t border-white/10">
             {actions}
           </div>
         </div>

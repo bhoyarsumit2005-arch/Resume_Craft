@@ -18,7 +18,7 @@ ResumeCraft is a full-stack, production-style resume builder built as a college 
 | **Section controls** | Collapsible sections, hide/show any section, empty sections never render in the resume |
 | **Live preview** | Auto-scaled A4 page that updates on every keystroke |
 | **Templates** | Six ATS-friendly, single-column designs — Modern, Classic, Minimal, Executive, Creative and Timeline. All use plain-text contact details, standard section headings, simple bullets and no tables, icons, photos or sidebars. Same data, switch anytime |
-| **Customisation** | 5 accent colours (Sky Blue, Cerulean Blue, Green, Jet Black, Neon Rose), 3 font sizes, and 6 ATS-safe font families (Arial, Calibri, Helvetica, Verdana, Georgia, Times New Roman) |
+| **Customisation** | Luxury Executive palette - 16 accent colours (Midnight Navy, Champagne Gold, Burgundy, Wine, Plum, Slate Blue, Ocean Blue, Deep Teal, Forest Green, Olive, Bronze, Copper, Steel Grey, Charcoal, Stone, Ink Black), 3 font sizes, and 6 ATS-safe font families (Arial, Calibri, Helvetica, Verdana, Georgia, Times New Roman) |
 | **PDF export** | jsPDF text generation, A4, automatic page breaks with proper margins, selectable/machine-readable text and no UI controls; **Print Resume** fallback |
 | **Auto-save** | Debounced auto-save with "Saved / Saving… / Unsaved changes" indicator + explicit Save button |
 | **Profile** | Update name and logout |

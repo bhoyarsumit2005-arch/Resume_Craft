@@ -49,7 +49,7 @@ export default function HomePage() {
       <main id="home">
         {/* Hero */}
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(60% 60% at 80% 10%, #d7f0f8 0%, transparent 60%), radial-gradient(40% 40% at 10% 80%, #ffe0ee 0%, transparent 60%)" }} />
+          <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(60% 60% at 80% 10%, #fdf0d3 0%, transparent 60%), radial-gradient(40% 40% at 10% 80%, #f4e4c2 0%, transparent 60%)" }} />
           <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
             <div className="fade-up">
               <span className="badge"><Sparkles size={12} /> Smart Resume Builder for Students</span>
@@ -149,7 +149,7 @@ export default function HomePage() {
             <h2 className="mt-3 text-3xl sm:text-4xl font-bold">Pick a design. Switch anytime.</h2>
             <p className="mt-3 text-gray-500">All templates use the same data, so changing your look never means re-typing.</p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {TEMPLATES.map((t) => (
               <TemplateCard key={t.id} id={t.id} name={t.name} description={t.description} tags={t.tags} width={240} />
             ))}
@@ -163,7 +163,7 @@ export default function HomePage() {
 
         {/* CTA */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 pb-20">
-          <div className="rounded-2xl px-6 py-14 text-center text-white" style={{ background: "linear-gradient(135deg, #0a0a0a 0%, #007ba7 70%, #ff4f9a 100%)" }}>
+          <div className="rounded-2xl px-6 py-14 text-center text-white" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #b45309 100%)" }}>
             <h2 className="text-3xl sm:text-4xl font-bold">Your next opportunity starts with a great resume.</h2>
             <p className="mt-3 text-indigo-100 max-w-xl mx-auto">Join students building standout resumes with ResumeCraft. It takes less than 10 minutes.</p>
             <Link to={primaryHref} className="btn btn-lg mt-8 bg-white text-indigo-700 hover:bg-indigo-50">

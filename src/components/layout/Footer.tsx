@@ -6,8 +6,8 @@ import { GithubIcon, LinkedinIcon } from "@/components/common/BrandIcons";
 export default function Footer() {
   return (
     <footer className="no-print border-t bg-white" style={{ borderColor: "var(--color-border)" }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 grid gap-10 md:grid-cols-4">
-        <div className="md:col-span-1">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="sm:col-span-2 lg:col-span-1">
           <Logo dark />
           <p className="mt-3 text-sm text-gray-500 leading-relaxed">
             Build Your Resume. Showcase Your Skills. Get Career Ready.
@@ -35,8 +35,8 @@ export default function Footer() {
           <h4 className="text-sm font-semibold text-gray-900 mb-3">Contact</h4>
           <ul className="space-y-2 text-sm text-gray-600">
             <li>
-              <a href="mailto:bhoyarsumit2005@gmail.com" className="flex items-center gap-2 hover:text-indigo-600">
-                <Mail size={14} /> bhoyarsumit2005@gmail.com
+              <a href="mailto:bhoyarsumit2005@gmail.com" className="flex items-start gap-2 hover:text-indigo-600">
+                <Mail size={14} className="mt-0.5 shrink-0" /> <span className="break-all">bhoyarsumit2005@gmail.com</span>
               </a>
             </li>
             <li>

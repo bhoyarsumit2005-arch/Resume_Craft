@@ -28,7 +28,7 @@ export default function TemplatesPage() {
           <p className="mt-2 text-sm text-gray-500">All templates share the same data — switch between them anytime without losing a single word.</p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3 mt-12">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mt-12">
           {TEMPLATES.map((t) => (
             <div key={t.id} className="flex flex-col gap-3">
               <TemplateCard id={t.id} name={t.name} description={t.description} tags={t.tags} width={260} />

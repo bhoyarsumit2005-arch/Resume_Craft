@@ -1,50 +1,53 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 /*
- * Brand palette: Jet Black + Cerulean Blue + Neon Rose.
- * The indigo/purple utilities are remapped to the brand colours so existing
+ * Brand palette: Luxury / Executive â€” Midnight Navy + Champagne Gold + Ivory.
+ * The indigo/purple utilities are remapped to the navy/gold scale so existing
  * components pick up the palette without one-off class changes.
  */
 @theme {
-  --color-jet: #0a0a0a;
-  --color-cerulean: #007ba7;
-  --color-neonrose: #ff4f9a;
+  --color-navy: #0f172a;
+  --color-ivory: #fffbeb;
+  --color-gold: #d97706;
+  --color-champagne: #f7ecd2;
 
-  --color-indigo-50: #e9f7fc;
-  --color-indigo-100: #cdeef7;
-  --color-indigo-200: #9fdeed;
-  --color-indigo-300: #63c8df;
-  --color-indigo-400: #2baccb;
-  --color-indigo-500: #0f92b5;
-  --color-indigo-600: #007ba7;
-  --color-indigo-700: #006485;
-  --color-indigo-800: #07516a;
-  --color-indigo-900: #0a4357;
-  --color-indigo-950: #042c3a;
+  /* Navy scale (was indigo) â€” primary actions, links, dark chrome. */
+  --color-indigo-50: #fdf8ec;
+  --color-indigo-100: #f7ecd2;
+  --color-indigo-200: #eedcb4;
+  --color-indigo-300: #dfc48d;
+  --color-indigo-400: #d97706;
+  --color-indigo-500: #b45309;
+  --color-indigo-600: #0f172a;
+  --color-indigo-700: #1e293b;
+  --color-indigo-800: #0b1220;
+  --color-indigo-900: #070d18;
+  --color-indigo-950: #04080f;
 
-  --color-purple-400: #ff9cc8;
-  --color-purple-500: #ff7ab8;
-  --color-purple-600: #ff4f9a;
-  --color-purple-700: #db2777;
+  /* Gold scale (was purple) â€” accents, gradients, highlights. */
+  --color-purple-400: #f0b429;
+  --color-purple-500: #d97706;
+  --color-purple-600: #b45309;
+  --color-purple-700: #92400e;
 }
 
 :root {
-  --color-primary: #0a0a0a;
-  --color-primary-hover: #262626;
-  --color-accent: #007ba7;
-  --color-accent-hover: #006485;
-  --color-accent-soft: #e9f7fc;
-  --color-bg: #f6f9fa;
-  --color-surface: #ffffff;
-  --color-text: #171717;
-  --color-muted: #6b7280;
-  --color-border: #e5e7eb;
-  --color-danger: #dc2626;
-  --color-success: #059669;
+  --color-primary: #0f172a;
+  --color-primary-hover: #1e293b;
+  --color-accent: #d97706;
+  --color-accent-hover: #b45309;
+  --color-accent-soft: #fdf3dd;
+  --color-bg: #fffbeb;
+  --color-surface: #fffdf8;
+  --color-text: #0f172a;
+  --color-muted: #78716c;
+  --color-border: #ece3cd;
+  --color-danger: #b91c1c;
+  --color-success: #15803d;
   --radius: 12px;
-  --shadow-sm: 0 1px 2px rgba(10, 10, 10, 0.06);
-  --shadow-md: 0 6px 20px rgba(10, 10, 10, 0.08);
-  --shadow-lg: 0 20px 50px rgba(10, 10, 10, 0.14);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 50px rgba(15, 23, 42, 0.14);
   --transition: 180ms ease;
 }
 
@@ -83,11 +86,12 @@ body {
 }
 .btn-primary {
   background: var(--color-accent);
-  color: #fff;
-  box-shadow: 0 1px 2px rgba(0, 123, 167, 0.25);
+  color: var(--color-primary);
+  box-shadow: 0 1px 2px rgba(180, 83, 9, 0.28);
 }
 .btn-primary:hover:not(:disabled) {
   background: var(--color-accent-hover);
+  color: #fff;
 }
 .btn-dark {
   background: var(--color-primary);
@@ -102,15 +106,15 @@ body {
   border-color: var(--color-border);
 }
 .btn-secondary:hover:not(:disabled) {
-  background: #f3f4f6;
-  border-color: #d1d5db;
+  background: #f7f1e3;
+  border-color: #dfd3b8;
 }
 .btn-ghost {
   background: transparent;
   color: var(--color-muted);
 }
 .btn-ghost:hover:not(:disabled) {
-  background: #f3f4f6;
+  background: #f7f1e3;
   color: var(--color-text);
 }
 .btn-danger {
@@ -150,14 +154,14 @@ body {
 }
 .input::placeholder,
 .textarea::placeholder {
-  color: #9ca3af;
+  color: #a8a29e;
 }
 .input:focus,
 .textarea:focus,
 .select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.18);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.22);
 }
 .input.has-error,
 .textarea.has-error {
@@ -191,17 +195,17 @@ body {
 .card-hover:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  border-color: #d1d5db;
+  border-color: #dfd3b8;
 }
 
 .badge {
   @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
   background: var(--color-accent-soft);
-  color: var(--color-accent);
+  color: var(--color-accent-hover);
 }
 .chip {
   @apply inline-flex items-center gap-1.5 rounded-full pl-3 pr-1.5 py-1 text-sm font-medium;
-  background: #f3f4f6;
+  background: #f7f1e3;
   color: var(--color-text);
   border: 1px solid var(--color-border);
 }
@@ -211,7 +215,7 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 .chip button:hover {
-  background: #e5e7eb;
+  background: #ece3cd;
   color: var(--color-danger);
 }
 
@@ -248,7 +252,7 @@ body {
 }
 .toast-dismiss-all:hover {
   color: var(--color-text);
-  background: #f3f4f6;
+  background: #f7f1e3;
 }
 .toast {
   position: relative;
@@ -283,7 +287,7 @@ body {
   font-size: 11px;
   font-weight: 700;
   color: var(--color-muted);
-  background: #f3f4f6;
+  background: #f7f1e3;
   border-radius: 999px;
   padding: 1px 7px;
 }
@@ -291,7 +295,7 @@ body {
   flex-shrink: 0;
   font-size: 12px;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-accent-hover);
   background: #fff;
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -311,7 +315,7 @@ body {
   border-radius: 6px;
 }
 .toast-close:hover {
-  background: #f3f4f6;
+  background: #f7f1e3;
 }
 /* Auto-dismiss countdown. Pauses while the toast is hovered or focused. */
 .toast-progress {
@@ -415,7 +419,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: rgba(10, 10, 10, 0.55);
+  background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(2px);
   display: grid;
   place-items: center;
@@ -474,7 +478,7 @@ body {
   transition: background var(--transition);
 }
 .section-header:hover {
-  background: #fafafa;
+  background: #fdf8ec;
 }
 .section-body {
   padding: 0 1rem 1rem;
@@ -485,12 +489,12 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 0.9rem;
-  background: #fafbfc;
+  background: #fdfaf2;
 }
 
 /* ---------- Resume preview paper ---------- */
 .resume-paper-wrap {
-  background: #e5e7eb;
+  background: #ece3cd;
   border-radius: var(--radius);
   padding: 1.25rem;
   overflow: auto;
@@ -579,7 +583,7 @@ body {
   transition: background var(--transition);
 }
 .menu-item:hover {
-  background: #f3f4f6;
+  background: #f7f1e3;
 }
 .action {
   @apply flex flex-col items-center gap-0.5 rounded-md py-1.5 text-[11px] font-medium;
@@ -587,7 +591,7 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 .action:hover:not(:disabled) {
-  background: #f3f4f6;
+  background: #f7f1e3;
   color: var(--color-text);
 }
 .action:disabled {

@@ -120,11 +120,11 @@ function DashboardContent() {
           <h1 className="text-2xl sm:text-3xl font-bold">Welcome back, {firstName} 👋</h1>
           <p className="text-gray-500 mt-1">Create and manage your professional resumes.</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => createNew(true)} icon={<Sparkles size={16} className="text-indigo-600" />}>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <Button variant="secondary" className="w-full sm:w-auto" onClick={() => createNew(true)} icon={<Sparkles size={16} className="text-indigo-600" />}>
             Try Demo Resume
           </Button>
-          <Button onClick={() => createNew(false)} icon={<Plus size={16} />}>
+          <Button className="w-full sm:w-auto" onClick={() => createNew(false)} icon={<Plus size={16} />}>
             Create New Resume
           </Button>
         </div>

@@ -6,7 +6,7 @@ import { Logo } from "@/components/layout/Navbar";
 export default function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle: string; children: ReactNode; footer: ReactNode }) {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      <aside className="hidden lg:flex flex-col justify-between p-12 text-white" style={{ background: "linear-gradient(160deg, #0a0a0a 0%, #063b4e 58%, #007ba7 100%)" }}>
+      <aside className="hidden lg:flex flex-col justify-between p-12 text-white" style={{ background: "linear-gradient(160deg, #0f172a 0%, #1a2537 55%, #b45309 100%)" }}>
         <Logo />
         <div>
           <h2 className="text-4xl font-bold leading-tight">Build Your Resume.<br />Showcase Your Skills.<br />Get Career Ready.</h2>
